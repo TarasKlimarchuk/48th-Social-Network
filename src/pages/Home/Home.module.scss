@@ -1,0 +1,23 @@
+.homeContainer {
+  width: 100%;
+  max-width: 1030px;
+  padding-right: 15px;
+  padding-left: 15px;
+  display: flex;
+  margin: 65px auto;
+}
+
+.postsContainer {
+  width: 65%;
+}
+
+@media (max-width: 700px) {
+  .homeContainer {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+  .postsContainer {
+    margin-top: 20px;
+    width: 100%;
+  }
+}

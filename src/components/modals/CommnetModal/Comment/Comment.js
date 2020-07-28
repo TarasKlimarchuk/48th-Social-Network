@@ -1,13 +1,13 @@
-import React, {useState} from "react";
-import classes from "./Comment.module.scss";
-import moment from "moment";
-import {Link} from "react-router-dom";
-import {connect} from "react-redux";
+import React, {useState} from "react" 
+import classes from "./Comment.module.scss" 
+import moment from "moment" 
+import {Link} from "react-router-dom" 
+import {connect} from "react-redux" 
 
-const Comment = ({comment,userData}) => {
+const Comment = ({comment,credentials}) => {
 
     const[isAuthUserPost,setIsAuthUserPost] = useState(false)
-    if(userData && userData.credentials.handle === comment.userHandle && !isAuthUserPost){
+    if(credentials && credentials.handle === comment.userHandle && !isAuthUserPost){
         setIsAuthUserPost(true)
     }
 
@@ -30,7 +30,7 @@ const Comment = ({comment,userData}) => {
 }
 
 const mapStateToProps = state => ({
-    userData: state.profilePage.userData
+    credentials: state.profilePage.credentials
 })
 
 export default connect(mapStateToProps,{})(Comment)

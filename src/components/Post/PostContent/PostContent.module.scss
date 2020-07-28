@@ -1,0 +1,61 @@
+.content {
+  width: 100%;
+  padding: 20px;
+}
+
+.handle {
+  font-size: 19px;
+  color: rgb(0,110,225);
+}
+
+.createdAt {
+  display: block;
+  color: #777777;
+  padding: 3px 0;
+}
+
+.body {
+  padding: 5px 0;
+}
+
+.actions {
+  display: flex;
+  margin-top: 5px;
+}
+
+.likes {
+  display: flex;
+  align-items: center;
+  width: 100px;
+  svg {
+    cursor: pointer;
+  }
+  small {
+    cursor: pointer;
+  }
+}
+
+.comments {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.iconText {
+  padding-left: 6px;
+}
+
+@media (max-width: 700px) {
+  .handle {
+    text-align: center;
+  }
+  .createdAt {
+    text-align: center;
+  }
+  .body {
+    text-align: center;
+  }
+  .actions {
+    justify-content: center;
+  }
+}

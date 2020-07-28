@@ -6,7 +6,7 @@ exports.getAllPosts = (req,res) => {
         data.forEach(doc => {
             posts.push({
                 postId: doc.id,
-                postBody: doc.data().postBody,
+                body: doc.data().body,
                 userHandle: doc.data().userHandle,
                 createdAt: doc.data().createdAt,
                 commentCount: doc.data().commentCount,
@@ -15,9 +15,10 @@ exports.getAllPosts = (req,res) => {
             })
         });
         console.log('data',data);
-        return res.json(posts)
+        return res.status(200).json(posts)
     }).catch(err => {
         console.log('error', err)
+        return res.status(500).json({error: 'Something went wrong'})
     })
 }
 
@@ -39,7 +40,7 @@ exports.addNewPost = (req,res) => {
         .add(newPost)
         .then((doc) => {
             const resPost = newPost;
-            resPost.postID = doc.id;
+            resPost.postId = doc.id;
             res.json(resPost);
         })
         .catch((err) => {
@@ -49,6 +50,13 @@ exports.addNewPost = (req,res) => {
 }
 
 exports.getPostById = (req,res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', '*');
+
+    if (req.method === 'OPTIONS') {
+        res.end();
+    }
     let postData = {};
     db.doc(`/posts/${req.params.postId}`).get()
         .then(doc => {
@@ -56,7 +64,7 @@ exports.getPostById = (req,res) => {
                 return res.status(404).json({ error: 'Post not found' });
             }
             postData = doc.data();
-            postData.posttId = doc.id;
+            postData.postId = doc.id;
             return db
                 .collection('comments')
                 .orderBy('createdAt', 'desc')
@@ -213,7 +221,7 @@ exports.deletePost = (req, res) => {
             }
         })
         .then(() => {
-            res.json({ message: 'Post deleted successfully' });
+            res.status(200).json({ message: 'Post deleted successfully' });
         })
         .catch((err) => {
             console.error(err);

@@ -1,0 +1,77 @@
+.notifications {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 400px;
+  background: #fff;
+  box-shadow: 0 0 5px rgba(0,0,0, .4);
+  border-radius: 3px;
+}
+
+.not {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #222222;
+  padding: 5px 0;
+  svg {
+    padding: 2px;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  &:hover {
+    text-decoration: none;
+    color: #222222;
+    background: rgba(205,205,205,.3);
+  }
+}
+
+@media (max-width: 920px) {
+  .notifications {
+    left: -50px;
+    top: 30px;
+  }
+}
+
+@media (max-width: 780px) {
+  .notifications {
+    left: -100px;
+
+  }
+}
+
+@media (max-width: 670px) {
+  .notifications {
+    left: -150px;
+  }
+}
+
+@media (max-width: 570px) {
+  .notifications {
+    left: -200px;
+  }
+}
+
+@media (max-width: 450px) {
+  .notifications {
+    left: -190px;
+    width: 360px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 375px) {
+  .notifications {
+    left: -200px;
+    width: 360px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 320px) {
+  .notifications {
+    left: -175px;
+    width: 300px;
+    font-size: 13px;
+  }
+}

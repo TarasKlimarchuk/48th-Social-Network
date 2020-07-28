@@ -1,5 +1,107 @@
+.userProfileWrap {
+    width: 33%
+}
+
 .userProfile {
-    width: 35%;
-    background: #ffa100;
-    margin-left: 1000px;
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 5px rgba(0,0,0, .4);
+    border-radius: 3px;
+}
+
+.content {
+    text-align: center;
+}
+
+.photo {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.editPhoto {
+    position: absolute;
+    bottom: 5px;
+    right: -5px;
+    cursor: pointer;
+    &:hover svg {
+        color: rgba(0,160,202, 1);
+    }
+}
+
+.handle {
+    padding-top: 10px;
+    padding-bottom: 5px;
+    line-height: 1;
+    font-size: 25px;
+    color: rgb(0,110,225);
+}
+
+.bio {
+    padding: 10px 0;
+}
+
+.location {
+    padding-bottom: 5px;
+}
+
+.location span {
+    padding-left: 10px;
+    font-size: 14px;
+}
+
+.createdAt {
+    display: block;
+    color: #777777;
+    font-size: 13px;
+    padding-top: 7px;
+    padding-bottom: 10px;
+}
+
+.signout {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    cursor: pointer;
+    span {
+        padding-left: 5px;
+        color: rgba(0,160,202, .8);
+        text-decoration: underline;
+    }
+    &:hover span, &:hover svg {
+        color: rgba(0,160,202, 1);
+    }
+}
+
+.edit {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+    span {
+        padding-left: 5px;
+        color: rgba(0,160,202, .8);
+        text-decoration: underline;
+    }
+    &:hover span, &:hover svg {
+        color: rgba(0,160,202, 1);
+    }
+}
+
+@media (max-width: 1028px) {
+    .createdAt {
+        padding-bottom: 30px;
+    }
+}
+
+@media (max-width: 700px) {
+    .userProfileWrap {
+        width: 80%;
+    }
 }

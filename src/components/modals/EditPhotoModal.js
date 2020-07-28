@@ -1,11 +1,12 @@
-import classes from "../../../cssModules/modal/Modal.module.scss";
-import formClasses from "../../../cssModules/forms/Form.module.scss";
-import btn from "../../../cssModules/buttons/buttons.module.scss";
-import React, {useState} from "react";
-import {connect} from "react-redux";
-import {Preloader} from "../../Preloader/Preloaders";
-import { app } from '../../../FBconfig/config'
-import {editPhoto} from "../../../store/profileReducer";
+import formClasses from "../../cssCommonModules/forms/Form.module.scss" 
+import btn from "../../cssCommonModules/buttons/buttons.module.scss" 
+import React, {useState} from "react" 
+import {connect} from "react-redux" 
+import {Preloader} from "../Preloader/Preloaders" 
+import { app } from '../../FBconfig/config'
+import {editPhoto} from "../../store/profileReducer" 
+import ModalWrapper from "./ModalWrapper"
+import InputErrorBlock from "../common/InputErrorBlock";
 
 const EditPhotoModal = ({setEditPhotoModal,handle,editPhoto,isFetching}) => {
     const[imageUrl,setImageUrl] = useState(null)
@@ -25,26 +26,25 @@ const EditPhotoModal = ({setEditPhotoModal,handle,editPhoto,isFetching}) => {
 
     const submitHandler = e => {
         e.preventDefault()
-        editPhoto(imageUrl,handle).then(() => {
-            setEditPhotoModal(false)
-        })
+        if(!fileTypeError){
+            editPhoto(imageUrl,handle).then(() => {
+                setEditPhotoModal(false)
+            })
+        }
     }
     return (
-        <div className={classes.modalWrapCenter}>
-            <div className={classes.modal}>
+        <ModalWrapper closeModal={setEditPhotoModal}>
                 <h5>Here you can add or change your photo</h5>
                 <form onSubmit={submitHandler}>
                     <div>
                         <input type="file" onChange={onFileChange} style={{'marginTop':'10px'}}/>
-                        {fileTypeError && <div className={formClasses.invalidDataError}>Invalid type of the file, must be png or jpeg</div>}
+                        <InputErrorBlock isError={fileTypeError} errorClass={formClasses.invalidDataError} errorMessage={`Invalid type of the file, must be png or jpeg`} />
                     </div>
                     { isFetching && <Preloader/>}
                     <button disabled={isFetching} type="submit" className={btn.btnSubmit} style={{ 'marginLeft':'10px','marginTop': '30px'}}>Edit</button>
-                    <button disabled={isFetching} onClick={() => {setEditPhotoModal(false)}} className={btn.btnSubmit} style={{ 'marginLeft':'10px','marginTop': '30px'}}>Close</button>
+                    <button disabled={isFetching} type="button" onClick={() => {setEditPhotoModal(false)}} className={btn.btnSubmit} style={{ 'marginLeft':'10px','marginTop': '30px'}}>Close</button>
                 </form>
-            </div>
-        </div>
-
+        </ModalWrapper>
     )
 }
 

@@ -9,6 +9,7 @@
     justify-content: center;
     align-items: center;
     box-shadow: 0 0 5px black;
+    z-index: 100;
 }
 
 .nav {
@@ -16,7 +17,7 @@
     justify-content: space-between;
     width: 100%;
     max-width: 150px;
-    margin-left: -50px;
+    margin-left: -25px;
 }
 
 .navIcon {
@@ -41,4 +42,20 @@
 
 .navItem a:hover {
     color: rgba(255,255,255, 1);
+}
+
+.notCount {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    right: -5px;
+    font-size: 12px;
+    line-height: 1;
+    color: #fff;
+    width: 22px;
+    height: 22px;
+    background: rgb(255,75,0);
+    border-radius: 50%;
 }

@@ -1,11 +1,12 @@
 .post {
+  margin-top: -15px;
   display: flex;
   position: relative;
 }
 
 .closeButton {
   position: absolute;
-  top: 0;
+  top: 10px;
   right: 0;
   cursor: pointer;
 }
@@ -13,8 +14,8 @@
 .closeIcon {
   width: 30px !important;
   height: 30px;
-  :hover {
-    fill: rgba(0,160,202, 1);
+  &:hover {
+    color: rgba(0,160,202, 1);
   }
 }
 
@@ -22,13 +23,17 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  margin: 0 auto;
+  margin: 20px auto 0;
   overflow: hidden;
 }
-
-
 
 .comments {
   margin-top: 30px;
   margin-bottom: -30px;
+}
+
+@media (max-width: 480px) {
+  .post {
+    display: block;
+  }
 }

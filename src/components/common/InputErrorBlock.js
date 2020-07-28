@@ -9,5 +9,5 @@ const InputErrorBlock = ({isError,errorClass,errorMessage}) => {
         </div>
     )
 }
-// {isEmailError && <div className={classes.emailErrorMessage}>{credentialsError.email}</div>}
+
 export default InputErrorBlock
