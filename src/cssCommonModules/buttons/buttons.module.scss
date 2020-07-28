@@ -1,0 +1,49 @@
+.btnSubmit {
+  background: rgb(0,160,202);
+  border: none;
+  padding: 8px 20px;
+  border-radius: 3px;
+  box-shadow: 0 0 3px rgb(0,160,202);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: .1s;
+  &:hover {
+    background: rgba(0,160,202, .9);
+  }
+  &:focus {
+    outline: none;
+    background: rgba(0,160,202, .7);
+  }
+  &:disabled {
+    outline: none;
+    background: rgba(0,160,202, .7);
+  }
+}
+
+.btnRed {
+  background: rgba(255,0,0,.8);
+  border: none;
+  padding: 8px 20px;
+  border-radius: 3px;
+  box-shadow: 0 0 3px rgba(255,0,0,.8);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: .1s;
+  &:hover {
+    background: rgba(255,0,0,.7);
+  }
+  &:focus {
+    outline: none;
+    background: rgba(255,0,0,.6);
+  }
+  &:disabled {
+    outline: none;
+    background: rgba(255,0,0,.6);
+  }
+}

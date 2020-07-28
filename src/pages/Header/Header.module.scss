@@ -1,0 +1,44 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgb(0,160,202);
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 5px black;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 150px;
+    margin-left: -50px;
+}
+
+.navIcon {
+    cursor: pointer;
+    transition: .1s;
+    padding: 10px;
+}
+
+.navIcon:hover {
+    transform: scale(1.1);
+}
+
+.navItem a {
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 10px;
+    color: rgba(255,255,255, .9);
+    cursor: pointer;
+    transition: .1s;
+}
+
+.navItem a:hover {
+    color: rgba(255,255,255, 1);
+}

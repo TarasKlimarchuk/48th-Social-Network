@@ -1,0 +1,95 @@
+.loginPage {
+    width: 100%;
+    max-width: 500px;
+    margin: 100px auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 300;
+}
+
+body {
+  font-family: sans-serif;
+}
+
+.label-before {
+  line-height: 20px;
+  font-size: 12px;
+  top: -10px;
+  background: rgb(245,244,246);
+  padding: 0 6px;
+  left: 9px;
+}
+
+.container {
+  width: 80%;
+  margin: 30px 10%;
+}
+
+.field {
+  position: relative;
+  margin-bottom: 15px;
+  label::before {
+    content: attr(title);
+    position: absolute;
+    top: 0;
+    left: 15px;
+    line-height: 40px;
+    font-size: 14px;
+    color: #777;
+    transition: 300ms all;
+    cursor: text;
+  }
+  input {
+    width: 100%;
+    line-height: 40px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background: rgb(245,244,246);
+    color: #222;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    &:focus {
+      outline: 0;
+      border-color: rgb(0,160,202);
+    }
+    &:valid + label::before {
+      @extend .label-before;
+      content: attr(data-title);
+    }
+    &:focus + label::before {
+      @extend .label-before;
+      color: rgb(0,160,202);
+    }
+  }
+}
+
+.invalidDataError {
+  margin-top: 10px;
+  color: rgba(red, .7) !important;
+}
+
+.inputError input{
+  border-bottom: 2px solid rgba(red, .7) !important;
+}
+
+.inputError label::before{
+  color: rgba(red, .7) !important;
+}
+
+.inputError .emailErrorMessage {
+  margin-top: 10px;
+  color: rgba(red, .7) !important;
+}
+
+.credErrorMessage {
+  text-align: center;
+  color: rgba(red, .7) !important;
+}
+
+.fieldBGColor input, .fieldBGColor.field .label-before {
+  background: #fff;
+}
