@@ -4,6 +4,28 @@
   position: relative;
 }
 
+.postContent {
+  width: calc(100% - 130px);
+  padding-left: 15px;
+}
+
+.handle {
+  font-size: 25px;
+  color: rgb(0,110,225);
+}
+
+.createdAt {
+  display: block;
+  color: #777777;
+  padding: 3px 0;
+}
+
+.body {
+  padding: 5px 0;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
 .closeButton {
   position: absolute;
   top: 10px;
@@ -20,11 +42,11 @@
 }
 
 .photo {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  margin: 20px auto 0;
+  width: 130px;
+  height: 130px;
+  margin: 10px auto 0;
   overflow: hidden;
+  box-shadow: 0 0 50px rgba(0,0,0,.1);
 }
 
 .comments {
