@@ -1,10 +1,10 @@
-import {applyMiddleware, combineReducers, createStore} from 'redux'
-import thunk from "redux-thunk";
-import {authReducer} from "./authReducer";
-import {homeReducer} from "./homeReducer";
-import {profileReducer} from "./profileReducer";
-import {fullPostReducer} from "./fullPostReducer";
-import {usersReducer} from "./usersReducer";
+import { applyMiddleware, combineReducers, createStore } from 'redux'
+import thunk from "redux-thunk"
+import { authReducer } from "./authReducer"
+import { homeReducer } from "./homeReducer"
+import { profileReducer } from "./profileReducer"
+import { fullPostReducer } from "./fullPostReducer"
+import { usersReducer } from "./usersReducer"
 
 
 export const storeReducers = combineReducers({
@@ -15,6 +15,6 @@ export const storeReducers = combineReducers({
     userPage: usersReducer
 })
 
-export const store = createStore(storeReducers,applyMiddleware(thunk));
+export const store = createStore(storeReducers,applyMiddleware(thunk))
 
-window.store = store;
+window.store = store

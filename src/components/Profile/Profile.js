@@ -1,44 +1,42 @@
-import React, {useEffect, useState} from "react" 
+import React from "react"
+import { connect } from "react-redux"
 import classes from './Profile.module.scss'
-import {connect} from "react-redux" 
+import btn from "../../cssCommonModules/buttons.module.scss"
+import moment from "moment"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faSignOutAlt, faMapMarkerAlt, faPen} from '@fortawesome/free-solid-svg-icons'
-import { getAuthUserDetails } from "../../store/profileReducer" 
-import { Preloader} from "../Preloader/Preloaders" 
-import moment from "moment" 
-import { signout } from "../../store/authReducer" 
-import btn from "../../cssCommonModules/buttons/buttons.module.scss" 
-import {Link} from "react-router-dom" 
-import EditProfileModal from "../modals/EditProfileModal" 
-import EditPhotoModal from "../modals/EditPhotoModal" 
+import { faSignOutAlt, faMapMarkerAlt, faPen } from '@fortawesome/free-solid-svg-icons'
+import { setEditPhotoModal, setEditProfileModal } from "../../store/profileReducer"
+import { Preloader } from "../common/Preloader/Preloaders"
+import { signout } from "../../store/authReducer"
+import { Link } from "react-router-dom"
+import EditProfileModal from "../modals/EditProfileModal"
+import EditPhotoModal from "../modals/EditPhotoModal"
 
-const Profile = ({isAuth,credentials,getAuthUserDetails,signout}) => {
-    const[editProfileModal,setEditProfileModal] = useState(false)
-    const[editPhotoModal,setEditPhotoModal] = useState(false)
+const Profile = ({isAuth, credentials, signout, setEditPhotoModal, setEditProfileModal}) => {
 
-    useEffect(() => {
-        if(isAuth){
-            getAuthUserDetails()
-        }
-    },[isAuth])
-
-    const logout = () => {
-        signout() 
+    const openEditPhotoModal = () => {
+        setEditPhotoModal(true)
     }
 
-    const blockHeight = credentials && credentials.bio && credentials.location ? {'minHeight': '360px'} : {'minHeight': '300px'}
+    const openEditProfileModal = () => {
+        setEditProfileModal(true)
+    }
+
+    const logout = () => {
+        signout()
+    }
 
     return (
         <div className={classes.userProfileWrap}>
-            <div className={classes.userProfile} style={isAuth ? blockHeight : {'height': '130px'}}>
-                { isAuth
-                    ?   <div>
+            <div className={classes.userProfile}>
+                {isAuth
+                    ? <div>
                         {
                             credentials
                                 ? <div className={classes.content}>
-                                    <div style={{'background': `url(${credentials.imageUrl}) center / cover no-repeat`}}
+                                    <div style={{background: `url(${credentials.imageUrl}) center / cover no-repeat`}}
                                          className={classes.photo}>
-                                        <div onClick={setEditPhotoModal} className={classes.editPhoto}>
+                                        <div onClick={openEditPhotoModal} className={classes.editPhoto}>
                                             <FontAwesomeIcon icon={faPen} size="lg" color='rgba(0,160,202,.8)'/>
                                         </div>
                                     </div>
@@ -52,25 +50,31 @@ const Profile = ({isAuth,credentials,getAuthUserDetails,signout}) => {
                                     <div onClick={logout} className={classes.signout}>
                                         <FontAwesomeIcon icon={faSignOutAlt} size="lg" color='rgba(0,160,202,.8)'/>
                                         <span>signout</span></div>
-                                     <div onClick={() => {setEditProfileModal(true)}} className={classes.edit}>
+                                    <div onClick={openEditProfileModal} className={classes.edit}>
                                         <FontAwesomeIcon icon={faPen} size="lg" color='rgba(0,160,202,.8)'/>
-                                        <span>edit</span></div>
+                                        <span>edit</span>
                                     </div>
-                                : <Preloader alignCenter={true} height={'260px'} />
+                                    <EditProfileModal setShowModal={setEditProfileModal}/>
+                                    <EditPhotoModal handle={credentials.handle} setEditPhotoModal={setEditPhotoModal}/>
+                                </div>
+                                : <Preloader alignCenter={true} height={'260px'}/>
                         }
-                        </div>
+                    </div>
                     : <div>
-                        <div>You are not authorized, please sign in or sign up.</div>
-                        <Link to={'/login'} ><button className={btn.btnSubmit} style={{ 'padding': '5px 15px','marginTop':'5px'}}>Login</button></Link>
-                        <Link to={'/signup'} ><button className={btn.btnSubmit} style={{ 'padding': '5px 15px','marginTop':'5px','marginLeft': '10px'}}>Sign up</button></Link>
+                        <div>You are not authorized, please login or sign up.</div>
+                        <Link to={'/login'}>
+                            <button className={btn.btnSubmit} style={{padding: '5px 15px', marginTop: '5px'}}>
+                                Login
+                            </button>
+                        </Link>
+                        <Link to={'/signup'}>
+                            <button className={btn.btnSubmit} style={{padding: '5px 15px', marginTop: '5px', marginLeft: '10px'}}>
+                                Sign up
+                            </button>
+                        </Link>
                     </div>
                 }
-                {
-                    editProfileModal && <EditProfileModal setShowModal={setEditProfileModal}/>
-                }
-                {
-                    editPhotoModal && <EditPhotoModal handle={credentials.handle} setEditPhotoModal={setEditPhotoModal}/>
-                }
+
             </div>
         </div>
     )
@@ -78,7 +82,8 @@ const Profile = ({isAuth,credentials,getAuthUserDetails,signout}) => {
 
 const mapStateToProps = state => ({
     isAuth: state.auth.isAuth,
-    credentials: state.profilePage.credentials
+    credentials: state.profilePage.credentials,
+    isProfileFetching: state.profilePage.isProfileFetching
 })
 
-export default connect(mapStateToProps,{getAuthUserDetails,signout})(Profile)
+export default connect(mapStateToProps, { signout, setEditPhotoModal, setEditProfileModal})(Profile)

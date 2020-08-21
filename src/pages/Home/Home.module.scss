@@ -1,14 +1,31 @@
 .homeContainer {
+  display: flex;
   width: 100%;
   max-width: 1030px;
+  margin: 65px auto;
   padding-right: 15px;
   padding-left: 15px;
-  display: flex;
-  margin: 65px auto;
 }
 
 .postsContainer {
-  width: 65%;
+  position: relative;
+  width: 63%;
+  padding-left: 12px;
+  padding-top: 30px;
+  border: 2px solid rgba(0,0,0,.1);
+  border-radius: 7px;
+}
+
+.postsTitle {
+  display: block;
+  position: absolute;
+  top: -16px;
+  left: calc(50% - 15px);
+  font-size: 20px;
+  font-weight: 500;
+  background: rgb(245,244,246);
+  color: rgba(0,0,0, .5);
+  user-select:none;
 }
 
 @media (max-width: 700px) {
@@ -17,7 +34,9 @@
     align-items: center;
   }
   .postsContainer {
-    margin-top: 20px;
     width: 100%;
+    margin-top: 20px;
+    padding-left: 10px;
+    padding-right: 5px;
   }
 }

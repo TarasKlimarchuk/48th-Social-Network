@@ -1,31 +1,31 @@
-import React, {useEffect} from 'react' 
-import './App.css' 
-import {Route, Switch, withRouter} from 'react-router-dom'
-import Header from "./pages/Header/Header" 
-import Login from "./pages/Login/Login" 
-import Signup from "./pages/Signup/Signup" 
-import jwtDecode from "jwt-decode" 
-import {connect} from "react-redux" 
-import {initializeApp} from "./store/authReducer" 
-import Home from "./pages/Home/Home" 
-import axios from "axios" 
-import UserProfile from "./pages/UsersProfile/UsersProfile" 
+import React, { useEffect } from 'react'
+import { connect } from "react-redux"
+import { Route, Switch, withRouter } from 'react-router-dom'
+import axios from "axios"
+import jwtDecode from "jwt-decode"
+import './App.css'
+import { authorizationsSuccess } from "./store/authReducer"
+import Header from "./pages/Header/Header"
+import Home from "./pages/Home/Home"
+import UserProfile from "./pages/UsersProfile/UsersProfile"
+import Login from "./pages/auth/Login"
+import Signup from "./pages/auth/Signup"
 
-const App = ({initializeApp,isAuthenticated,...props}) => {
+const App = ({authorizationsSuccess,isAuth,...props}) => {
     useEffect(() => {
         const token = localStorage.FBIdToken
         if(token){
             const decodedToken = jwtDecode(token)
             if(decodedToken.exp * 1000 < Date.now()){
                 localStorage.removeItem('FBIdToken')
-                if(isAuthenticated === true) initializeApp(false)
+                if(isAuth === true) authorizationsSuccess(false)
                 props.history.push('/login')
             } else {
                 axios.defaults.headers.common['Authorization'] = token
-                initializeApp(true)
+                authorizationsSuccess(true)
             }
         }
-    },[isAuthenticated])
+    },[isAuth])
 
     return (
         <div className="App">
@@ -40,7 +40,7 @@ const App = ({initializeApp,isAuthenticated,...props}) => {
                 <Route exact path='/signup'>
                     <Signup/>
                 </Route>
-                <Route exact path='/users/:handle'>
+                <Route exact  path='/users/:handle'>
                     <UserProfile/>
                 </Route>
                 <Route exact path='/users/:handle/post/:postId'>
@@ -52,7 +52,7 @@ const App = ({initializeApp,isAuthenticated,...props}) => {
 }
 
 const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuth
+    isAuth: state.auth.isAuth
 })
 
-export default withRouter(connect(mapStateToProps, {initializeApp})(App)) 
+export default withRouter(connect(mapStateToProps, {authorizationsSuccess})(App))

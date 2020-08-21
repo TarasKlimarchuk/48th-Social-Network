@@ -1,19 +1,19 @@
-import React from "react";
-import classes from './auth.module.css'
-import {faLock} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import React from "react"
+import classes from './auth.module.scss'
+import { faLock } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-const FormContainer = ({height,...props}) => {
+const AuthFormContainer = ({height,children}) => {
     return (
         <div className={classes.authPage} style={{height}}>
             <div className={classes.authContent}>
                 <div className={classes.lockIcon}>
                     <FontAwesomeIcon icon={faLock} size="2x" color='#fff'/>
                 </div>
-                {props.children}
+                {children}
             </div>
         </div>
     )
 }
 
-export default FormContainer
+export default AuthFormContainer

@@ -1,67 +1,58 @@
-.authPage {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    background: rgb(251,254,253);
-}
-
-.authContent {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 450px;
-    margin-top: 70px;
-    box-shadow: 0 0 10px rgba(0,0,0,.5);
-}
-
-.form {
-    width: 90%;
-    margin-top: 10px;
-}
-
-.lockIcon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px;
-    height: 50px;
-    margin: 15px 0;
-    border-radius: 50%;
-    background: rgb(0,160,202);
-}
-
-.title {
-    font-size: 30px;
-    font-weight: 400;
-    line-height: 1;
-}
-
 .inputBox {
     position: relative;
 }
 
-.input {
+.input, .errorInput {
     width: 100%;
-    padding: 10px 0;
-    font-size: 16px;
+    outline: none;
+    margin-top: 20px;
     margin-bottom: 30px;
     border: none;
-    border-bottom: 2px solid rgb(169,169,169);
-    outline: none;
+    padding: 10px 0;
+    font-size: 16px;
     background: transparent;
 }
 
-.label {
+.input {
+    border-bottom: 2px solid rgb(169,169,169);
+}
+
+.errorInput {
+    border-bottom: 2px solid rgb(255,0,0);
+}
+
+.label, .errorLabel {
     position: absolute;
     top: 0;
     left: 0;
+    margin-top: 20px;
+    margin-bottom: 30px;
     padding: 10px 0;
     font-size: 16px;
-    margin-bottom: 30px;
-    color: rgb(169,169,169);
     pointer-events: none;
     transition: all .3s, font-weight .01s;
+}
+
+.label {
+    color: rgb(169,169,169);
+}
+
+.errorLabel {
+    color: rgb(255,0,0);
+}
+
+.errorInput:focus ~ label,
+.errorInput:valid ~ label {
+    top: -18px;
+    left: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgb(255,0,0);
+}
+
+.errorInput:focus,
+.errorInput:valid {
+    border-bottom: 2px solid rgb(255,0,0);
 }
 
 .input:focus ~ label,
@@ -76,32 +67,4 @@
 .input:focus,
 .input:valid {
     border-bottom: 2px solid rgba(0,160,202, .9);
-}
-
-
-.button {
-    width: 100%;
-    height: 35px;
-    outline: none;
-    border: none;
-    border-radius: 5px;
-    background: rgba(169,169,169, .3);
-    font-size: 16px;
-    font-weight: 600;
-    color: rgba(0,160,202, .9);
-    cursor: pointer;
-}
-.button:active, .button:disabled, .button.focus {
-    width: 100%;
-    height: 35px;
-    color: rgb(169,169,169);
-    font-size: 16px;
-    background: rgba(169,169,169, .5);
-    outline: none;
-    border: none;
-    border-radius: 5px;
-}
-
-.link {
-    margin-top: 10px;
 }

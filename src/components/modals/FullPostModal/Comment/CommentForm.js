@@ -1,14 +1,12 @@
-import formClasses from "../../../../cssCommonModules/Form.module.scss"
-import {Preloader} from "../../../common/Preloader/Preloaders"
+import React, { useEffect, useState } from "react"
+import { connect } from "react-redux"
 import btn from "../../../../cssCommonModules/buttons.module.scss"
-import React, {useEffect, useState} from "react"
-import {connect} from "react-redux" 
-import {sendComment} from "../../../../store/fullPostReducer" 
-import {sendCommentToUserProfile} from "../../../../store/usersReducer"
-import InputBox from "../../../common/InputBox/InputBox";
-import CredErrorBlock from "../../../common/CredErrorBlock/CredErrorBlock";
+import { Preloader } from "../../../common/Preloader/Preloaders"
+import { sendComment } from "../../../../store/fullPostReducer"
+import InputBox from "../../../common/InputBox/InputBox"
+import CredErrorBlock from "../../../common/CredErrorBlock/CredErrorBlock"
 
-const CommentForm = ({sendComment,commentError,postId,isFormFetching,isUserProfilePost,sendCommentToUserProfile}) => {
+const CommentForm = ({sendComment,commentError,postId,isFormFetching}) => {
     const[comment,setComment] = useState('')
 
     useEffect(()=>{
@@ -19,13 +17,14 @@ const CommentForm = ({sendComment,commentError,postId,isFormFetching,isUserProfi
 
     const submitHandler = e => {
         e.preventDefault()
-        isUserProfilePost ? sendCommentToUserProfile(postId,comment) : sendComment(postId,comment)
+        sendComment(postId,comment)
     }
 
     return (
         <form onSubmit={submitHandler}>
             <CredErrorBlock errorMessage={commentError}/>
             <InputBox value={comment} setValue={setComment} label={'Your comment'} isError={commentError}/>
+            {isFormFetching && <Preloader/>}
             <button disabled={isFormFetching} type="submit" className={btn.btnSubmit} >Send</button>
         </form>
     )
@@ -36,4 +35,4 @@ const mapStateToProps = state => ({
     isFormFetching: state.postPage.isFormFetching
 })
 
-export default connect(mapStateToProps,{sendComment,sendCommentToUserProfile})(CommentForm)
+export default connect(mapStateToProps,{sendComment})(CommentForm)

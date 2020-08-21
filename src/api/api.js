@@ -1,62 +1,64 @@
-import axios from "axios" 
+import axios from "axios"
 
-axios.defaults.baseURL = 'https://us-central1-social-app-portfolio.cloudfunctions.net/api' 
+axios.defaults.baseURL = 'https://us-central1-social-app-portfolio.cloudfunctions.net/api'
 
 function getOptions() {
     const token = localStorage.FBIdToken
-    if(token){
-         return   {
+    if (token) {
+        return {
             headers: {'Authorization': token}
         }
     }
 }
 
 export const usersApi = {
-    signup(handle,email,password,confirmPassword){
-        return axios.post('/signup',{handle,email,password,confirmPassword})
+    signup(handle, email, password, confirmPassword) {
+        return axios.post('/signup', {handle, email, password, confirmPassword})
     },
-    login(email,password){
-        return axios.post('/login',{email,password})
+    login(email, password) {
+        return axios.post('/login', {email, password})
     },
-    signout(){
+    logout() {
         return axios.get('/signout')
     },
-    getUserDetails(handle){
+    getUserDetails(handle) {
         return axios.get(`/user/${handle}`)
     }
 }
 
 
 export const postsApi = {
-    getPosts(){
+    getPosts() {
         return axios.get('/posts')
     },
-    addNewPost(body){
-        return axios.post('/post',{body})
+    addNewPost(body) {
+        return axios.post('/post', {body})
     },
-    getAuthUser(){
-        // тут я використати options через баг з заголовками в axios
-        return axios.get('/user',getOptions())
+    getAuthUser() {
+        return axios.get('/user'/*,getOptions()*/)
     },
-    getPostById(postId){
+    getPostById(postId) {
         return axios.get(`/post/${postId}`)
     },
-    addUserDetails(bio,location){
-        return axios.post('/user', {bio,location})
+    addUserDetails(bio, location) {
+        return axios.post('/user', {bio, location})
     },
-    likePost(postId){
+    likePost(postId) {
         return axios.get(`/post/${postId}/like`)
     },
-    unlikePost(postId){
+    unlikePost(postId) {
         return axios.get(`/post/${postId}/unlike`)
     },
-    commentPost(postId,body){
-        return axios.post(`/post/${postId}/comment`,{body})
+    commentPost(postId, body) {
+        return axios.post(`/post/${postId}/comment`, {body})
     },
-    deletePost(postId){
+    deleteComment(postId, commentId) {
+        return axios.delete(`/comment/${postId}/${commentId}`)
+    },
+    deletePost(postId) {
         return axios.delete(`/post/${postId}`)
     },
-    markNotificationsRead(arr){
+    markNotificationsRead(arr) {
         return axios.post('/notifications', arr)
     }
 }

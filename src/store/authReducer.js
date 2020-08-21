@@ -1,95 +1,123 @@
-import {usersApi} from "../api/api";
+import { usersApi } from "../api/api"
 import axios from 'axios'
-import { setUserDataNull } from "./profileReducer";
+import { setUserDataNull } from "./profileReducer"
 
+const AUTHORIZATION_SUCCESS = 'authReducer/AUTHORIZATION_SUCCESS'
+const SIGNUP_ERROR = 'authReducer/SIGNUP_ERROR'
+const LOGIN_ERROR = 'authReducer/LOGIN_ERROR'
 const SET_IS_FETCHING = 'authReducer/SET_IS_FETCHING'
-const SET_CREDENTIALS_SUCCESS = 'authReducer/SET_CREDENTIALS_SUCCESS'
-const SET_CREDENTIALS_ERROR = 'authReducer/SET_CREDENTIALS_ERROR'
-const INITIALIZE_APP = 'authReducer/INITIALIZE_APP'
 
 const initialState = {
-    isFetching: false,
-    credentialsError: null,
-    isAuth: false
+    loginError: null,
+    signupError: null,
+    isAuth: false,
+    isFormFetching: false
 }
 
 export const authReducer = (state = initialState, action) => {
     switch (action.type) {
+        case AUTHORIZATION_SUCCESS:
+            return {
+                ...state,
+                loginError: null,
+                signupError: null,
+                isAuth: action.isAuth
+            }
+        case LOGIN_ERROR:
+            return {
+                ...state,
+                loginError: action.error,
+                isAuth: false
+            }
+        case SIGNUP_ERROR:
+            return {
+                ...state,
+                signupError: action.error,
+                isAuth: false
+            }
         case SET_IS_FETCHING:
             return {
                 ...state,
-                isFetching: action.isFetching
-            }
-        case SET_CREDENTIALS_SUCCESS:
-            return {
-                ...state,
-                credentialsError: null,
-                isAuth: true
-            }
-        case SET_CREDENTIALS_ERROR:
-            return {
-                ...state,
-                credentialsError: action.error
-            }
-        case INITIALIZE_APP:
-            return {
-                ...state,
-                isAuth: action.isAuth
+                isFormFetching: action.isFormFetching
             }
         default:
             return state
     }
 }
 
-export const initializeApp = isAuth => ({type: INITIALIZE_APP, isAuth})
-const setCredentialsSuccess = () => ({type: SET_CREDENTIALS_SUCCESS})
-const setCredentialsError = error => ({type: SET_CREDENTIALS_ERROR, error})
-const setIsFetching = isFetching => ({type: SET_IS_FETCHING, isFetching})
+export const authorizationsSuccess = (isAuth) => ({type: AUTHORIZATION_SUCCESS, isAuth})
+const loginError = (error) => ({type: LOGIN_ERROR, error})
+const signupError = (error) => ({type: SIGNUP_ERROR, error})
+const setFormFetching = isFormFetching => ({type: SET_IS_FETCHING, isFormFetching})
 
 export const signup = (handle,email,password,confirmPassword) => async dispatch => {
+    dispatch(setFormFetching(true))
+    dispatch(signupError(null))
     try {
-        dispatch(setIsFetching(true))
-        const res = await usersApi.signup(handle,email,password,confirmPassword)
-        if(res.status === 200){
-            localStorage.setItem('FBIdToken',`Bearer ${res.data.token}`)
-            dispatch(setCredentialsSuccess())
-            dispatch(setIsFetching(false))
+        const res = await usersApi.signup(handle, email, password, confirmPassword)
+        if (res.status === 200) {
+            localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`)
+            dispatch(authorizationsSuccess(true))
         }
-    }
-    catch (err) {
-        dispatch(setCredentialsError(err.response.data))
-        dispatch(setIsFetching(false))
+        dispatch(setFormFetching(false))
+    } catch (err) {
+        dispatch(setFormFetching(false))
+        if(err.response) {
+            if (err.response.status === 400) {
+                dispatch(signupError(err.response.data.error))
+            }
+            if (err.response.status === 500) {
+                dispatch(signupError('Something went wrong, please try again later'))
+            }
+        }
     }
 }
 
 export const login = (email,password) => async dispatch => {
+    dispatch(setFormFetching(true))
+    dispatch(loginError(null))
     try {
-        dispatch(setIsFetching(true))
-        const res = await usersApi.login(email,password)
-        if(res.status === 200){
-            localStorage.setItem('FBIdToken',`Bearer ${res.data.token}`)
-            dispatch(setCredentialsSuccess())
-            dispatch(setIsFetching(false))
+        const res = await usersApi.login(email, password)
+        if (res.status === 200) {
+            localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`)
+            dispatch(authorizationsSuccess(true))
         }
-    }
-    catch (err) {
-        dispatch(setCredentialsError(err.response.data))
-        dispatch(setIsFetching(false))
+        dispatch(setFormFetching(false))
+    } catch (err) {
+        dispatch(setFormFetching(false))
+        if(err.response) {
+            if (err.response.status === 400) {
+                dispatch(loginError(err.response.data.error))
+            }
+            if (err.response.status === 500) {
+                dispatch(loginError('Something went wrong, please try again later'))
+            }
+        }
     }
 }
 
 export const signout = () => async dispatch => {
+    dispatch(setFormFetching(true))
     try {
-        const res = await usersApi.signout()
-        if(res.status === 200){
+        const res = await usersApi.logout()
+        if (res.status === 200) {
             localStorage.removeItem('FBIdToken')
+            delete axios.defaults.headers.common['Authorization']
             dispatch(setUserDataNull())
-            delete axios.defaults.headers.common['Authorization'];
-            dispatch(initializeApp(false))
+            dispatch(authorizationsSuccess(false))
+        }
+        dispatch(setFormFetching(false))
+    } catch (err) {
+        dispatch(setFormFetching(false))
+        if(err.response) {
+            if (err.response.status === 500) {
+                console.log('Something Wrond')
+                //dispatch(loginError('Something went wrong, please try again later'))
+            }
         }
     }
-    catch (err) {
-        console.log(err.response.data)
-    }
 }
+
+
+
 

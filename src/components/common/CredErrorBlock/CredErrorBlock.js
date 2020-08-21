@@ -1,11 +1,7 @@
-import React, { FC } from "react";
-import classes from './CredErrorBlock.module.css'
+import React from "react"
+import classes from './CredErrorBlock.module.scss'
 
-type OwnProps = {
-    errorMessage: string | null
-}
-
-const CredErrorBlock:FC<OwnProps> = ({errorMessage}) => {
+const CredErrorBlock = ({errorMessage}) => {
 
     if(errorMessage){
         return (
@@ -14,7 +10,7 @@ const CredErrorBlock:FC<OwnProps> = ({errorMessage}) => {
             </div>
         )
     }
-    
+
     return null
 }
 

@@ -1,55 +1,59 @@
-import formClasses from "../../cssCommonModules/forms/Form.module.scss" 
-import btn from "../../cssCommonModules/buttons/buttons.module.scss" 
-import React, {useState} from "react" 
-import {connect} from "react-redux" 
-import {Preloader} from "../Preloader/Preloaders" 
+import React, { useState } from "react"
+import { connect } from "react-redux"
 import { app } from '../../FBconfig/config'
-import {editPhoto} from "../../store/profileReducer" 
+import btn from "../../cssCommonModules/buttons.module.scss"
+import { Preloader } from "../common/Preloader/Preloaders"
+import { editPhoto, setFormFetching } from "../../store/profileReducer"
 import ModalWrapper from "./ModalWrapper"
-import InputErrorBlock from "../common/InputErrorBlock";
+import CredErrorBlock from "../common/CredErrorBlock/CredErrorBlock"
 
-const EditPhotoModal = ({setEditPhotoModal,handle,editPhoto,isFetching}) => {
-    const[imageUrl,setImageUrl] = useState(null)
+const EditPhotoModal = ({setEditPhotoModal,handle,editPhoto,isFetching,setFormFetching,editPhotoModal}) => {
+    const[file,setFile] = useState(null)
     const[fileTypeError,setFileTypeError] = useState(false)
 
-    const onFileChange = async e => {
+    const onFileChange =  e => {
+        setFileTypeError(false)
         const file = e.target.files[0]
+        setFile(file)
+    }
+
+    const submitHandler = async e => {
+        e.preventDefault()
         if(file.type.split('/')[1] === 'png' || file.type.split('/')[1] === 'jpeg'){
+            setFormFetching(true)
             const storageRef = app.storage().ref()
             const fileRef = storageRef.child(file.name)
             await fileRef.put(file)
-            setImageUrl(await fileRef.getDownloadURL())
+            await fileRef.getDownloadURL()
+            editPhoto(await fileRef.getDownloadURL(),handle)
         } else {
             setFileTypeError(true)
         }
     }
 
-    const submitHandler = e => {
-        e.preventDefault()
-        if(!fileTypeError){
-            editPhoto(imageUrl,handle).then(() => {
-                setEditPhotoModal(false)
-            })
-        }
+    const closeModal = () => {
+        setEditPhotoModal(false)
     }
+
     return (
-        <ModalWrapper closeModal={setEditPhotoModal}>
+        <ModalWrapper closeModal={setEditPhotoModal} isModalOpen={editPhotoModal}>
                 <h5>Here you can add or change your photo</h5>
                 <form onSubmit={submitHandler}>
                     <div>
-                        <input type="file" onChange={onFileChange} style={{'marginTop':'10px'}}/>
-                        <InputErrorBlock isError={fileTypeError} errorClass={formClasses.invalidDataError} errorMessage={`Invalid type of the file, must be png or jpeg`} />
+                        <CredErrorBlock errorMessage={fileTypeError && `Invalid type of the file, must be png or jpeg`}/>
+                        <input type="file" onChange={onFileChange} style={{marginTop:'10px'}}/>
                     </div>
-                    { isFetching && <Preloader/>}
-                    <button disabled={isFetching} type="submit" className={btn.btnSubmit} style={{ 'marginLeft':'10px','marginTop': '30px'}}>Edit</button>
-                    <button disabled={isFetching} type="button" onClick={() => {setEditPhotoModal(false)}} className={btn.btnSubmit} style={{ 'marginLeft':'10px','marginTop': '30px'}}>Close</button>
+                    {isFetching && <Preloader/>}
+                    <button disabled={isFetching} type="submit" className={btn.btnSubmit} style={{marginLeft:'10px',marginTop: '30px'}}>Edit</button>
+                    <button disabled={isFetching} type="button" onClick={closeModal} className={btn.btnSubmit} style={{marginLeft:'10px',marginTop: '30px'}}>Close</button>
                 </form>
         </ModalWrapper>
     )
 }
 
 const mapStateToProps = state => ({
-    isFetching: state.profilePage.isFormFetching
+    isFetching: state.profilePage.isFormFetching,
+    editPhotoModal: state.profilePage.editPhotoModal
 })
 
-export default connect(mapStateToProps,{editPhoto})(EditPhotoModal)
+export default connect(mapStateToProps,{editPhoto,setFormFetching})(EditPhotoModal)

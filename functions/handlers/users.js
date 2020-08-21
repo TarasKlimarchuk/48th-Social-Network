@@ -1,5 +1,4 @@
 const { db } = require('../util/admin')
-const cors = require('cors')({origin:true})
 
 const config = require('../util/config')
 
@@ -11,112 +10,110 @@ function isEmpty(value){
     else return false
 }
 
+function isMaxLength(value, maxLength) {
+    if(value.length > maxLength) return true
+    return false
+}
+
 function isEmailValid(email){
     const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return !!email.match(regEx);
 }
 
 exports.signup = (req, res) => {
-        res.set('Access-Control-Allow-Origin', '*');
-        res.set('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS');
-        res.set('Access-Control-Allow-Headers', '*');
-        const newUser = {
-            email: req.body.email,
-            password: req.body.password,
-            confirmPassword: req.body.confirmPassword,
-            handle: req.body.handle,
-        };
+    const newUser = {
+        email: req.body.email,
+        password: req.body.password,
+        confirmPassword: req.body.confirmPassword,
+        handle: req.body.handle,
+    };
 
-        let errors = {}
-        if(isEmpty(newUser.handle)) errors.userHandle = 'Must not be empty'
-        if(isEmpty(newUser.email)) errors.email = 'Must not be empty'
-        if(!isEmailValid(newUser.email)) errors.email = 'Email is invalid'
-        if(isEmpty(newUser.password)) errors.password = 'Must not be empty'
-        if(newUser.password !== newUser.confirmPassword) errors.confirmPassword = 'Passwords do not match'
+    if (!isEmailValid(newUser.email)) return res.status(400).send({error: 'Email is invalid'})
+    if (newUser.password !== newUser.confirmPassword) return res.status(400).send({error: 'Passwords do not match'})
 
-        if(Object.keys(errors).length !== 0){
-            return res.status(400).send(errors)
-        }
-
-        let token, userId;
-        db.doc(`/users/${newUser.handle}`)
-            .get()
-            .then((doc) => {
-                if (doc.exists) {
-                    return res.status(400).send({ handle: "this handle is already taken" });
-                } else {
-                    return firebase
-                        .auth()
-                        .createUserWithEmailAndPassword(newUser.email, newUser.password);
-                }
-            })
-            .then((data) => {
-                userId = data.user.uid;
-                return data.user.getIdToken();
-            })
-            .then((idToken) => {
-                token = idToken;
-                const userCredentials = {
-                    handle: newUser.handle,
-                    email: newUser.email,
-                    createdAt: new Date().toISOString(),
-                    imageUrl: 'https://firebasestorage.googleapis.com/v0/b/social-apppp.appspot.com/o/no-img-avatar.jpg?alt=media&token=5bc7ea6b-dea3-42ab-976d-ac70260b25a4',
-                    userId,
-                };
-                return db.doc(`/users/${newUser.handle}`).set(userCredentials);
-            })
-            .then(() => {
-                return res.status(200).send({ token });
-            })
-            .catch((err) => {
-                console.error(err);
-                if (err.code === "auth/email-already-in-use") {
-                    return res.status(400).send({ email: "Email is already is use" });
-                } else {
-                    return res
-                        .status(500)
-                        .send({ general: "Something went wrong, please try again" });
-                }
-            });
+    let token, userId;
+    db.doc(`/users/${newUser.handle}`)
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                return res.status(400).send({handle: "this handle is already taken"});
+            } else {
+                return firebase
+                    .auth()
+                    .createUserWithEmailAndPassword(newUser.email, newUser.password)
+            }
+        })
+        .then((data) => {
+            userId = data.user.uid;
+            return data.user.getIdToken();
+        })
+        .then((idToken) => {
+            token = idToken;
+            const userCredentials = {
+                handle: newUser.handle,
+                email: newUser.email,
+                createdAt: new Date().toISOString(),
+                imageUrl: 'https://firebasestorage.googleapis.com/v0/b/type-reacttracks.appspot.com/o/no-img-avatar.jpg?alt=media&token=a4365ea0-77b1-493c-9f08-61a90dbd13f8',
+                userId,
+            };
+            return db.doc(`/users/${newUser.handle}`).set(userCredentials);
+        })
+        .then(() => {
+            return res.status(200).send({token});
+        })
+        .catch((err) => {
+            console.error(err);
+            if (err.code === "auth/email-already-in-use") {
+                return res.status(400).send({error: "Email is already is use"});
+            } else if (err.code === "auth/weak-password") {
+                return res.status(400).send({error: "Password is too weak"});
+            } else {
+                return res
+                    .status(500)
+                    .send({error: err.code});
+            }
+        });
 };
 
-exports.logout = (req,res) => {
-    firebase.auth().signOut().then(() => {
-        return res.status(200).json({message: 'log out success'})
-    }).catch((err) => {
-        return res.status(500).json({err})
-    })
-}
-
-exports.login = (req,res) => {
-
+exports.login = (req, res) => {
     const user = {
         email: req.body.email,
         password: req.body.password
     }
-    let errors = {}
-    if(isEmpty(user.email)) errors.handle = 'Must not be empty';
-    if(!isEmailValid(user.email)) errors.email = 'Email is invalid'
-    if(Object.keys(errors).length > 0){
-        return res.status(400).json(errors)
+
+    if (!isEmailValid(user.email)) {
+        return res.status(400).json({error: 'Email is invalid'})
     }
 
-    firebase.auth().signInWithEmailAndPassword(user.email,user.password)
+    firebase.auth().signInWithEmailAndPassword(user.email, user.password)
         .then(data => {
             return data.user.getIdToken();
         })
         .then(token => {
-            return res.json({ token });
+            return res.json({token});
         })
         .catch(err => {
             console.error(err)
-            if(err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found'){
-                return res.status(400).json({error: 'Wrong credentials, please try again'})
+            if (err.code === 'auth/wrong-password') {
+                return res.status(400).json({error: 'Wrong password, please try again'})
+            }
+            if (err.code === 'auth/user-not-found') {
+                return res.status(400).json({error: 'User is not found, please try again'})
             } else {
                 return res.status(500).json({error: err.code})
             }
         })
 }
+
+exports.logout = (req, res) => {
+    firebase.auth().signOut().then(() => {
+        return res.status(200).json({message: 'logout success'})
+    }).catch((err) => {
+        return res.status(500).json({error: err.code})
+    })
+}
+
+
 
 // Add user details
 exports.addUserDetails = (req, res) => {
@@ -124,7 +121,19 @@ exports.addUserDetails = (req, res) => {
 
     if (!isEmpty(req.body.bio.trim())) userDetails.bio = req.body.bio;
     if (!isEmpty(req.body.location.trim())) userDetails.location = req.body.location;
-    
+
+    if(!isMaxLength(req.body.bio,150)){
+        userDetails.bio = req.body.bio;
+    } else {
+        return res.status(400).json({error: 'Max length of the biography has to be 150'})
+    }
+
+    if(!isMaxLength(req.body.location,30)){
+        userDetails.location = req.body.location;
+    } else {
+        return res.status(400).json({error: 'Max length of the location has to be 30'})
+    }
+
     db.doc(`/users/${req.user.handle}`)
         .update(userDetails)
         .then(() => {
@@ -149,7 +158,7 @@ exports.getUserDetails = (req, res) => {
                     .where("userHandle", "==", req.params.handle)
                     .get();
             } else {
-                return res.status(404).json({ error: "User not found" });
+                return res.status(400).json({ error: "User not found" });
             }
         })
         .then((data) => {
@@ -175,9 +184,6 @@ exports.getUserDetails = (req, res) => {
 
 // Get own user details
 exports.getAuthenticatedUser = (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
-    res.set('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS');
-    res.set('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin, Authorization');
     let userData = {};
     db.doc(`/users/${req.user.handle}`)
         .get()
@@ -215,7 +221,7 @@ exports.getAuthenticatedUser = (req, res) => {
                     notificationId: doc.id,
                 });
             });
-            return res.json(userData);
+            return res.status(200).json(userData);
         })
         .catch((err) => {
             console.error(err);

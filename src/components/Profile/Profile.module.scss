@@ -1,14 +1,29 @@
 .userProfileWrap {
-    width: 33%
+    width: 35%;
+    margin-left: 3px;
 }
 
 .userProfile {
     position: relative;
     width: 100%;
     padding: 20px;
+    border-radius: 7px;
     background: #fff;
     box-shadow: 0 0 5px rgba(0,0,0, .4);
-    border-radius: 3px;
+}
+
+.postsTitle {
+    display: block;
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    font-size: 20px;
+    font-weight: 500;
+    background: rgb(245,244,246);
+    color: rgba(0,0,0, .5);
+    transform: translateX(-50%);
+    user-select:none;
+    white-space: nowrap;
 }
 
 .content {
@@ -19,8 +34,8 @@
     position: relative;
     width: 150px;
     height: 150px;
-    border-radius: 50%;
     margin: 0 auto;
+    border-radius: 50%;
 }
 
 .editPhoto {
@@ -43,6 +58,8 @@
 
 .bio {
     padding: 10px 0;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .location {
@@ -56,18 +73,18 @@
 
 .createdAt {
     display: block;
-    color: #777777;
-    font-size: 13px;
     padding-top: 7px;
-    padding-bottom: 10px;
+    padding-bottom: 30px;
+    font-size: 13px;
+    color: #777777;
 }
 
 .signout {
     display: flex;
-    align-items: center;
     position: absolute;
     bottom: 20px;
     left: 20px;
+    align-items: center;
     cursor: pointer;
     span {
         padding-left: 5px;
@@ -86,8 +103,8 @@
     cursor: pointer;
     span {
         padding-left: 5px;
-        color: rgba(0,160,202, .8);
         text-decoration: underline;
+        color: rgba(0,160,202, .8);
     }
     &:hover span, &:hover svg {
         color: rgba(0,160,202, 1);
@@ -102,6 +119,41 @@
 
 @media (max-width: 700px) {
     .userProfileWrap {
-        width: 80%;
+        width: 110%;
+    }
+    .userProfile {
+        background: transparent;
+        box-shadow: none;
+    }
+    .photo {
+        width: 250px;
+        height: 250px;
+        border-radius: 0;
+    }
+    .editPhoto {
+        bottom: -30px;
+        right: -60px;
+        padding: 10px;
+        border: 2px solid rgba(#222, .5);
+        border-radius: 3px;
+        &:hover {
+            box-shadow: 0 0 5px rgba(#222, .5);
+        }
+    }
+    .content {
+        text-align: center;
+    }
+}
+
+@media (max-width: 500px) {
+    .editPhoto {
+        right: -50px;
+    }
+}
+
+@media (max-width: 500px) {
+    .editPhoto {
+        right: -35px;
+        padding: 5px;
     }
 }

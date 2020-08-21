@@ -1,17 +1,35 @@
 .comment {
   display: flex;
+  position: relative;
   padding-bottom: 10px;
   margin-bottom: 20px;
-  :not(:last-child) {
+  &:not(:last-child) {
+    border-bottom: 1px solid grey;
+  }
+  &:hover .basket {
+    display: block;
+  }
+}
+
+.commentWithAnimations {
+  display: flex;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  background: rgba(grey, .2);
+  box-shadow: 0 0 10px rgba(grey, .4);
+  transition: all 2s;
+  transform: scale(1.03);
+  &:not(:last-child) {
     border-bottom: 1px solid grey;
   }
 }
 
 .photo {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
+  width: 80px;
+  height: 80px;
   margin: 0 auto;
+  border-radius: 5px;
   overflow: hidden;
 }
 
@@ -25,14 +43,44 @@
   color: rgb(0,110,225);
 }
 
+.handle a {
+  text-decoration: none;
+}
+
 .createdAt {
   display: block;
-  color: #777777;
   padding: 3px 0;
+  color: #777777;
 }
 
 .body {
   padding: 5px 0;
   word-wrap: break-word;
   white-space: pre-wrap;
+}
+
+.basket {
+  display: none;
+  position: absolute;
+  top: -2px;
+  right: 0;
+  padding: 5px;
+  cursor: pointer;
+  color: rgba(255,0,0,.6);
+  transition: all .2s;
+  &:hover {
+    color: rgba(255,0,0,.9);
+  }
+}
+
+@media (max-width: 320px) {
+  .photo {
+    height: 70px;
+  }
+  .createdAt {
+    font-size: 12px;
+  }
+  .body {
+    font-size: 15px;
+  }
 }

@@ -55,7 +55,51 @@
 }
 
 @media (max-width: 480px) {
-  .post {
+  .photo {
+    width: 100px;
+    height: 100px;
+    margin-left: 20px;
+  }
+  .handle {
     display: block;
+    margin-top: 20px;
+    margin-left: 20px;
+    font-size: 20px;
+  }
+  .createdAt {
+    margin-left: 20px;
+  }
+  .body {
+    margin-left: -140px;
+    width: 400px;
+    margin-top: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .handle {
+    font-size: 17px;
+    margin-left: 10px;
+  }
+  .createdAt {
+    margin-left: 10px;
+  }
+  .photo {
+    margin-left: 0;
+  }
+  .body {
+    margin-left: -120px;
+  }
+}
+
+@media (max-width: 320px) {
+  .photo {
+    width: 90px;
+    height: 90px;
+    margin-left: 0;
+  }
+  .body {
+    margin-left: -100px;
+    margin-top: 30px;
   }
 }

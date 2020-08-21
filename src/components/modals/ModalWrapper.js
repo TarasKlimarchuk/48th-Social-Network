@@ -1,21 +1,25 @@
-import React, {useRef} from "react" 
+import React, {useRef} from "react"
 import classes from "./Modal.module.scss"
 
-const ModalWrapper = ({closeModal, modalWrapCenter = true, ...props}) => {
+const ModalWrapper = ({closeModal, modalWrapCenter = true, isModalOpen, children}) => {
 
     const modalWrap = useRef()
     const handleClickOutside = e => {
-        if(e.target === modalWrap.current){
-            closeModal(false)
+        if (e.target === modalWrap.current) {
+            closeModal()
         }
     }
 
     return (
-        <div className={modalWrapCenter ? classes.modalWrapCenter : classes.modalWrap} onClick={handleClickOutside} ref={modalWrap}>
-            <div className={classes.modal}>
-                {props.children}
-            </div>
-        </div>
+        <>
+            {
+                isModalOpen && <div className={modalWrapCenter ? classes.modalWrapCenter : classes.modalWrap} onMouseDown={handleClickOutside} ref={modalWrap}>
+                    <div className={classes.modal}>
+                        {children}
+                    </div>
+                </div>
+            }
+        </>
     )
 }
 

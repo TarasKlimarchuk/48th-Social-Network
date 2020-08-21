@@ -1,5 +1,10 @@
 const { db } = require('../util/admin');
 
+function isMaxLength(value, maxLength) {
+    if(value.length > maxLength) return true
+    return false
+}
+
 exports.getAllPosts = (req,res) => {
     db.collection('posts').orderBy('createdAt', 'desc').get().then(data => {
         let posts = [];
@@ -27,6 +32,9 @@ exports.addNewPost = (req,res) => {
     if (req.body.body.trim() === '') {
         return res.status(400).json({ body: 'Body must not be empty' });
     }
+
+    if(isMaxLength(req.body.body,250)) return res.status(400).json({error: 'Max length of the post is 250'})
+
     const newPost = {
         body: req.body.body,
         userHandle: req.user.handle,
@@ -44,16 +52,12 @@ exports.addNewPost = (req,res) => {
             res.json(resPost);
         })
         .catch((err) => {
-            res.status(500).json({ error: 'something went wrong' });
+            res.status(500).json({ error: err.code });
             console.error(err);
         });
 }
 
 exports.getPostById = (req,res) => {
-    res.set('Access-Control-Allow-Origin', '*');
-    res.set('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS');
-    res.set('Access-Control-Allow-Headers', '*');
-
     if (req.method === 'OPTIONS') {
         res.end();
     }
@@ -61,7 +65,7 @@ exports.getPostById = (req,res) => {
     db.doc(`/posts/${req.params.postId}`).get()
         .then(doc => {
             if (!doc.exists) {
-                return res.status(404).json({ error: 'Post not found' });
+                return res.status(400).json({ error: 'Post not found' });
             }
             postData = doc.data();
             postData.postId = doc.id;
@@ -73,9 +77,17 @@ exports.getPostById = (req,res) => {
         }).then((data) => {
         postData.comments = [];
         data.forEach((doc) => {
-            postData.comments.push(doc.data());
+            const resComment = {
+                body: doc.data().body,
+                createdAt: doc.data().createdAt,
+                postId: doc.data().postId,
+                userHandle: doc.data().userHandle,
+                userImage: doc.data().userImage,
+                commentId: doc.id
+            }
+            postData.comments.push(resComment);
         });
-        return res.json(postData);
+        return res.status(200).json(postData);
     }).catch(err => {
         console.error('error ', err)
         return res.status(500).json({error: err})
@@ -83,8 +95,8 @@ exports.getPostById = (req,res) => {
 }
 
 exports.commentOnPost = (req, res) => {
-    if (req.body.body.trim() === '')
-        return res.status(400).json({ comment: 'Must not be empty' });
+
+    if(isMaxLength(req.body.body,230)){return res.status(400).json({error: 'Max length of the comment is 230'})}
 
     const newComment = {
         body: req.body.body,
@@ -93,27 +105,54 @@ exports.commentOnPost = (req, res) => {
         userHandle: req.user.handle,
         userImage: req.user.imageUrl
     };
-    console.log(newComment);
 
     db.doc(`/posts/${req.params.postId}`)
         .get()
         .then((doc) => {
             if (!doc.exists) {
-                return res.status(404).json({ error: 'Post not found' });
+                return res.status(400).json({ error: 'Post not found' });
             }
-            return doc.ref.update({ commentCount: doc.data().commentCount + 1 });
+            doc.ref.update({ commentCount: doc.data().commentCount + 1 });
         })
         .then(() => {
             return db.collection('comments').add(newComment);
         })
-        .then(() => {
-            res.json(newComment);
+        .then((doc) => {
+            const resComment = newComment
+            resComment.commentId = doc.id
+            res.status(200).json(resComment);
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).json({ error: 'Something went wrong' });
+            res.status(500).json({ error: err.code });
         });
 };
+
+exports.deleteComment = (req, res) => {
+    const document = db.doc(`/comments/${req.params.commentId}`);
+    document
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                return res.status(400).json({ error: 'Comment not found' });
+            }
+            if (doc.data().userHandle !== req.user.handle) {
+                return res.status(400).json({ error: 'Unauthorized' });
+            } else {
+                return db.doc(`/posts/${req.params.postId}`).update({ commentCount: doc.data().commentCount - 1 });
+            }
+        })
+        .then(() => {
+            return document.delete();
+        })
+        .then(() => {
+            res.status(200).json({ message: 'Comment deleted successfully' });
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.code });
+        });
+};
+
 
 exports.likePost = (req, res) => {
     const likeDocument = db
@@ -134,7 +173,7 @@ exports.likePost = (req, res) => {
                 postData.postId = doc.id;
                 return likeDocument.get();
             } else {
-                return res.status(404).json({ error: 'Post not found' });
+                return res.status(400).json({ error: 'Post not found' });
             }
         })
         .then((data) => {
@@ -181,7 +220,7 @@ exports.unlikePost = (req, res) => {
                 postData.postId = doc.id;
                 return likeDocument.get();
             } else {
-                return res.status(404).json({ error: 'Post not found' });
+                return res.status(400).json({ error: 'Post not found' });
             }
         })
         .then((data) => {
@@ -212,7 +251,7 @@ exports.deletePost = (req, res) => {
         .get()
         .then((doc) => {
             if (!doc.exists) {
-                return res.status(404).json({ error: 'Post not found' });
+                return res.status(400).json({ error: 'Post not found' });
             }
             if (doc.data().userHandle !== req.user.handle) {
                 return res.status(403).json({ error: 'Unauthorized' });

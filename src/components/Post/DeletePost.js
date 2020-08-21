@@ -1,11 +1,17 @@
-import React, {useState} from "react" 
-import classes from "./Post.module.scss" 
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome" 
-import {faTrashAlt} from "@fortawesome/free-regular-svg-icons" 
-import DeletePostModal from "../modals/DeletePostModal" 
+import React, { useState } from "react"
+import { connect } from "react-redux"
+import classes from "./Post.module.scss"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faTrashAlt } from "@fortawesome/free-regular-svg-icons"
+import { deletePost } from "../../store/homeReducer"
+import DeleteModal from "../modals/DeleteModal"
 
-const DeletePost = ({isAuthUserPost,deletedPost}) => {
+const DeletePost = ({isAuthUserPost,deletedPost,deletePost}) => {
     const[deletePostModal,setDeletePostModal] = useState(false)
+
+    const removePost = () => {
+        deletePost(deletedPost)
+    }
 
     return (
         <div>
@@ -15,10 +21,15 @@ const DeletePost = ({isAuthUserPost,deletedPost}) => {
                 </div>
             }
             {
-                deletePostModal && <DeletePostModal setDeletePostModal={setDeletePostModal} postId={deletedPost}/>
+                deletePostModal && <DeleteModal
+                    deleteItem={removePost}
+                    setDeletePostModal={setDeletePostModal}
+                    title={'Are you sure you want to delete this Post?'}
+                    isModalOpen={deletePostModal}
+                />
             }
         </div>
     )
 }
 
-export default DeletePost
+export default connect(null,{deletePost})(DeletePost)

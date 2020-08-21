@@ -1,19 +1,17 @@
 import classes from './CommentModal.module.scss'
-import React, {useEffect, useRef} from "react"
-import {connect} from "react-redux" 
-import {Preloader} from "../../common/Preloader/Preloaders"
-import PostContent from "../../Post/PostContent/PostContent" 
-import Comment from "./Comment/Comment" 
-import { faTimes } from "@fortawesome/free-solid-svg-icons" 
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome" 
-import {Link} from "react-router-dom"
-import ModalWrapper from "../ModalWrapper" 
-import CommentForm from "./CommentForm/CommentForm"
-import {setFullPostModalOpen} from "../../../store/fullPostReducer";
-import PostActions from "../../Post/PostContent/PostActions";
-import moment from "moment";
+import React, { useEffect } from "react"
+import { connect } from "react-redux"
+import { Link } from "react-router-dom"
+import { faTimes } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import moment from "moment"
+import { Preloader } from "../../common/Preloader/Preloaders"
+import Comment from "./Comment/Comment"
+import CommentForm from "./Comment/CommentForm"
+import ModalWrapper from "../ModalWrapper"
+import PostActions from "../../Post/PostContent/PostActions"
 
-const CommentModal = ({post,isPostLiked,isCommentModal,likePostHandler,unLikePostHandler,closeModal,likeCount,commentCount,getPostFetching,isUserProfilePost,isAuthUserPost,postDataError}) => {
+const FullPostModal = ({post,isPostLiked,isCommentModal,credentials,likePostHandler,unLikePostHandler,closeModal,likeCount,commentCount,getPostFetching}) => {
 
     useEffect(() => {
         if(isCommentModal){
@@ -21,22 +19,23 @@ const CommentModal = ({post,isPostLiked,isCommentModal,likePostHandler,unLikePos
         } else document.body.style.overflow = ''
     },[isCommentModal])
 
-    const com = useRef(null)
-
     return (
-        <ModalWrapper closeModal={closeModal} modalWrapCenter={false} style={{'width':'550px'}} isModalOpen={isCommentModal}>
+        <ModalWrapper closeModal={closeModal} modalWrapCenter={false}
+                      style={{width: '550px'}}
+                      isModalOpen={isCommentModal && credentials}
+        >
             {
                 !getPostFetching ? post &&
                     <div>
                         <div className={classes.post}>
                             <Link to={`/users/${post.userHandle}`}>
-                                    <div style={{'background': `url(${post.userImage}) center / cover no-repeat`}} className={classes.photo}/>
+                                <div style={{background: `url(${post.userImage}) center / cover no-repeat`}} className={classes.photo}/>
                             </Link>
                             <div className={classes.postContent}>
                                 <Link to={`/users/${post.userHandle}`} className={classes.handle}>{post.userHandle}</Link>
                                 <small className={classes.createdAt}>{moment(post.createdAt).calendar()}</small>
                                 <div className={classes.body}>{post.body}</div>
-                            <div style={{marginLeft: '-100px'}}>
+                                <div style={{marginLeft: '-100px'}}>
                                 <PostActions
                                     isPostLiked={isPostLiked}
                                     likePostHandler={likePostHandler}
@@ -44,25 +43,26 @@ const CommentModal = ({post,isPostLiked,isCommentModal,likePostHandler,unLikePos
                                     likeCount={likeCount}
                                     commentCount={commentCount}
                                 />
-                            </div>
+                                </div>
                             </div>
                             <div onClick={() => {closeModal()}} className={classes.closeButton}>
                                 <FontAwesomeIcon className={classes.closeIcon} icon={faTimes} color='rgba(0,160,202,.8)'/>
                             </div>
                         </div>
-                        <CommentForm postId={post.postId} isUserProfilePost={isUserProfilePost} comRef={com}/>
-                        <div ref={com} className={classes.comments}>
+                        <CommentForm postId={post.postId}/>
+                        <div className={classes.comments}>
                             {
-                                post.comments.slice().reverse().map(comment => {
+                                post.comments.map(comment => {
                                     return <Comment
                                         key={comment.createdAt}
                                         comment={comment}
+                                        postId={post.postId}
                                     />
                                 })
                             }
-                        </div >
+                        </div>
                     </div>
-                    : <Preloader />
+                    : <Preloader/>
             }
         </ModalWrapper>
         )
@@ -88,13 +88,12 @@ const CommentModal = ({post,isPostLiked,isCommentModal,likePostHandler,unLikePos
                                     unLikePostHandler={unLikePostHandler}
                                     likeCount={likeCount}
                                     commentCount={commentCount}
-                                    isAuthUserPost={isAuthUserPost}
                                 />
                                 <div onClick={closeCommentModal} className={classes.closeButton}>
                                     <FontAwesomeIcon className={classes.closeIcon} icon={faTimes} color='rgba(0,160,202,.8)'/>
                                 </div>
                             </div>
-                            <CommentForm postId={post.postId} isUserProfilePost={isUserProfilePost}/>
+                            <CommentForm postId={post.postId}/>
                             <div className={classes.comments}>
                                 {
                                     post.comments.map(comment => {
@@ -124,4 +123,4 @@ const mapStateToProps = state => ({
     getPostFetching: state.postPage.getPostFetching
 })
 
-export default connect(mapStateToProps)(CommentModal)
+export default connect(mapStateToProps)(FullPostModal)

@@ -1,15 +1,15 @@
-const functions = require('firebase-functions');
+    const functions = require('firebase-functions');
 
-const express = require('express')
-const app = express();
-const FBAuth = require('./util/FBAuth')
+    const express = require('express')
+    const app = express();
+    const FBAuth = require('./util/FBAuth')
 
-const { db } = require('./util/admin')
+    const { db } = require('./util/admin')
 
-const cors = require('cors');
-app.use(cors());
+    const cors = require('cors');
+    app.use(cors());
 
-const { getAllPosts, addNewPost, getPostById, commentOnPost, likePost, unlikePost, deletePost } = require('./handlers/posts');
+const { getAllPosts, addNewPost, getPostById, commentOnPost, likePost, unlikePost, deletePost, deleteComment } = require('./handlers/posts');
 const { login,signup, logout, addUserDetails, getAuthenticatedUser, getUserDetails, markNotificationsRead} = require('./handlers/users')
 
 
@@ -19,6 +19,7 @@ app.get('/posts', getAllPosts);
 app.post('/post', FBAuth, addNewPost);
 app.get('/post/:postId', getPostById);
 app.post('/post/:postId/comment', FBAuth, commentOnPost);
+app.delete('/comment/:postId/:commentId', FBAuth, deleteComment);
 app.get('/post/:postId/like',FBAuth, likePost)
 app.get('/post/:postId/unlike', FBAuth, unlikePost);
 app.delete('/post/:postId', FBAuth, deletePost);
@@ -69,6 +70,19 @@ exports.deleteNotificationOnUnLike = functions
                 return;
             });
     });
+
+exports.deleteNotificationOnCommentDelete = functions
+    .firestore.document('comments/{id}')
+    .onDelete((snapshot) => {
+        return db
+            .doc(`/notifications/${snapshot.id}`)
+            .delete()
+            .catch((err) => {
+                console.error(err);
+                return;
+            });
+    });
+
 
 exports.createNotificationOnComment = functions
     .firestore.document('comments/{id}')
