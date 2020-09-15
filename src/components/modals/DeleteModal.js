@@ -4,7 +4,7 @@ import btn from "../../cssCommonModules/buttons.module.scss"
 import ModalWrapper from "./ModalWrapper"
 import { Preloader } from "../common/Preloader/Preloaders"
 
-const DeleteModal = ({deleteItem,title,setDeletePostModal,isModalOpen,isHomeFormFetching,isDeleteFetching}) => {
+const DeleteModal = ({onDelete,title,setDeletePostModal,isModalOpen,isHomeFormFetching,isDeleteFetching}) => {
 
     const closeModal = () => {
         setDeletePostModal(false)
@@ -15,7 +15,7 @@ const DeleteModal = ({deleteItem,title,setDeletePostModal,isModalOpen,isHomeForm
             <h4>{title}</h4>
             {isDeleteFetching && <Preloader/>}
             {isHomeFormFetching && <Preloader/>}
-            <button disabled={isHomeFormFetching || isDeleteFetching} onClick={deleteItem} type="button" className={btn.btnRed} style={{marginTop:'30px'}}>Delete</button>
+            <button disabled={isHomeFormFetching || isDeleteFetching} onClick={onDelete} type="button" className={btn.btnRed} style={{marginTop:'30px'}}>Delete</button>
             <button disabled={isHomeFormFetching || isDeleteFetching} onClick={closeModal} type="button" className={btn.btnSubmit} style={{marginLeft:'10px',marginTop:'30px'}}>Cancel</button>
          </ModalWrapper>
     )

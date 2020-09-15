@@ -9,7 +9,7 @@ import DeleteModal from "../modals/DeleteModal"
 const DeletePost = ({isAuthUserPost,deletedPost,deletePost}) => {
     const[deletePostModal,setDeletePostModal] = useState(false)
 
-    const removePost = () => {
+    const deletePostHandle = () => {
         deletePost(deletedPost)
     }
 
@@ -22,7 +22,7 @@ const DeletePost = ({isAuthUserPost,deletedPost,deletePost}) => {
             }
             {
                 deletePostModal && <DeleteModal
-                    deleteItem={removePost}
+                    onDelete={deletePostHandle}
                     setDeletePostModal={setDeletePostModal}
                     title={'Are you sure you want to delete this Post?'}
                     isModalOpen={deletePostModal}

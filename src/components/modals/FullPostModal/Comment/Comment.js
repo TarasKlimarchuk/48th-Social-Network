@@ -5,7 +5,15 @@ import moment from "moment"
 import classes from "./Comment.module.scss"
 import DeleteComment from "./DeleteComment"
 
-const Comment = ({comment,isFormFetching,authUserHandle,postId}) => {
+const Comment = ({comment,isFormFetching,credentials,postId}) => {
+
+    const[authUserHandle,setAuthUserHandle] = useState(false)
+
+    useEffect(() => {
+        if(credentials){
+            setAuthUserHandle(credentials.handle)
+        }
+    },[credentials])
 
     const[isAuthUserComment, setIsAuthUserComment] = useState(false)
 
@@ -18,7 +26,7 @@ const Comment = ({comment,isFormFetching,authUserHandle,postId}) => {
     },[authUserHandle,comment])
 
     return (
-        <div className={comment.isAnimation === true ? classes.commentWithAnimations : classes.comment}>
+        <div className={classes.comment}>
             <Link to={`/users/${comment.userHandle}`} style={{background: `rgba(0,0,0,.4) url(${comment.userImage}) center / cover no-repeat`}} className={classes.photo}/>
             <div className={classes.content}>
                 <div className={classes.handle}>
@@ -38,7 +46,7 @@ const Comment = ({comment,isFormFetching,authUserHandle,postId}) => {
 }
 
 const mapStateToProps = state => ({
-    authUserHandle: state.profilePage.credentials.handle,
+    credentials: state.profilePage.credentials,
     isFormFetching: state.postPage.isFormFetching
 })
 

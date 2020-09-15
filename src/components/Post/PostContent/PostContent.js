@@ -4,7 +4,7 @@ import classes from "./PostContent.module.scss"
 import { Link } from "react-router-dom"
 import PostActions from "./PostActions"
 
-const  PostContent = ({post,isPostLiked,likePostHandler,unLikePostHandler,openCommentModal = false, likeCount,commentCount}) => {
+const  PostContent = ({post,isPostLiked,likePost,unLikePost,openCommentModal = false, likeCount,commentCount}) => {
     return (
         <div className={classes.content}>
             <div className={classes.handle}><Link to={`/users/${post.userHandle}`}>{post.userHandle}</Link></div>
@@ -14,8 +14,8 @@ const  PostContent = ({post,isPostLiked,likePostHandler,unLikePostHandler,openCo
                 commentCount={commentCount}
                 likeCount={likeCount}
                 isPostLiked={isPostLiked}
-                likePostHandler={likePostHandler}
-                unLikePostHandler={unLikePostHandler}
+                likePost={likePost}
+                unLikePost={unLikePost}
                 openCommentModal={openCommentModal}
             />
         </div>

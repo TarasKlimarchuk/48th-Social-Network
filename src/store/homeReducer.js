@@ -6,6 +6,8 @@ import {
     userProfileLikeCountMinus,
     userProfileLikeCountPlus
 } from "./usersReducer"
+import {authorizationsSuccess} from "./authReducer";
+import axios from "axios";
 
 const SET_ALL_POSTS = 'homeReducer/SET_ALL_POSTS'
 const ADD_NEW_POST_SUCCESS = 'homeReducer/ADD_NEW_POST_SUCCESS'
@@ -123,7 +125,7 @@ export const homeReducer = (state = initialState, action) => {
 const setAllPosts = posts => ({type: SET_ALL_POSTS, posts})
 export const setIsHomePageFetching = isFetching => ({type: SET_IS_HOME_PAGE_FETCHING, isFetching})
 const addNewPostSuccess = post => ({type:ADD_NEW_POST_SUCCESS, post})
-const setAddNewPostError = error => ({type: ADD_NEW_POST_ERROR, error})
+export const setAddNewPostError = error => ({type: ADD_NEW_POST_ERROR, error})
 const setFormFetching = isFormFetching => ({type: SET_FORM_FETCHING, isFormFetching})
 const removePost = postId => ({type: REMOVE_POST, postId})
 export const setCreatePostModalOpen = isModal => ({type: SET_CREATE_POST_MODAL, isModal})
@@ -135,17 +137,10 @@ export const updatePostsUserPhoto = (image,handle) => ({type: UPDATE_POSTS_USER_
 
 export const getPosts = () => async dispatch => {
     dispatch(setIsHomePageFetching(true))
-    try {
-        const res = await postsApi.getPosts()
-        if(res.status === 200){
-            dispatch(setAllPosts(res.data))
-            dispatch(setIsHomePageFetching(false))
-        }
-    }
-    catch (err) {
-        if (err.response.status === 500) {
-            // error
-        }
+    const res = await postsApi.getPosts()
+    if(res.status === 200){
+        dispatch(setAllPosts(res.data))
+        dispatch(setIsHomePageFetching(false))
     }
 }
 
@@ -167,8 +162,14 @@ export const addNewPost = post => async dispatch => {
             if (err.response.status === 400) {
                 dispatch(setAddNewPostError(err.response.data.error))
             }
+            if (err.response.status === 403) {
+                localStorage.removeItem('FBIdToken')
+                delete axios.defaults.headers.common['Authorization']
+                dispatch(authorizationsSuccess(false))
+                window.location.href = '/login'
+            }
             if (err.response.status === 500) {
-                dispatch(setAddNewPostError('Something went wrong, please try again later'))
+                dispatch(setAddNewPostError('Something went wrong'))
             }
         }
     }
@@ -186,12 +187,11 @@ export const likePost = postId => async dispatch => {
     }
     catch (err) {
         if(err.response){
-            if (err.response.status === 400) {
-                //Post not found
-                //Post already liked
-            }
-            if (err.response.status === 500) {
-                //error
+            if (err.response.status === 403) {
+                localStorage.removeItem('FBIdToken')
+                delete axios.defaults.headers.common['Authorization']
+                dispatch(authorizationsSuccess(false))
+                window.location.href = '/login'
             }
         }
     }
@@ -208,12 +208,11 @@ export const unLikePost = postId => async dispatch => {
     }
     catch (err) {
         if(err.response){
-            if (err.response.status === 400) {
-                //Post not found
-                //Post not liked
-            }
-            if (err.response.status === 500) {
-                //error
+            if (err.response.status === 403) {
+                localStorage.removeItem('FBIdToken')
+                delete axios.defaults.headers.common['Authorization']
+                dispatch(authorizationsSuccess(false))
+                window.location.href = '/login'
             }
         }
     }
@@ -232,14 +231,11 @@ export const deletePost = postId => async dispatch => {
     catch (err) {
         dispatch(setFormFetching(false))
         if(err.response){
-            if (err.response.status === 400) {
-                //Post not found
-            }
             if (err.response.status === 403) {
-                //Unauthorized
-            }
-            if (err.response.status === 500) {
-                //error
+                localStorage.removeItem('FBIdToken')
+                delete axios.defaults.headers.common['Authorization']
+                dispatch(authorizationsSuccess(false))
+                window.location.href = '/login'
             }
         }
     }

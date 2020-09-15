@@ -1,3 +1,60 @@
 .App {
   margin-top: 50px;
 }
+
+
+/*
+  Animations
+  <===========================>
+*/
+
+/*Posts animation*/
+
+.post-enter {
+  opacity: 0.01;
+  transform: translateX(-50px);
+}
+.post-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 500ms ease-in;
+}
+
+/*Comments animation*/
+
+.comment-enter {
+  opacity: 0.01;
+  transform: translate(0, -20px);
+}
+.comment-enter-active {
+  opacity: 1;
+  transform: translate(0, 0);
+  transition: all 500ms ease-in;
+}
+.comment-exit {
+  opacity: 1;
+}
+.comment-exit-active {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
+}
+
+/*Comments animation*/
+
+.modal-enter {
+  opacity: 0;
+  transform: scale(0.7);
+}
+.modal-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.modal-exit {
+  opacity: 1;
+}
+.modal-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}

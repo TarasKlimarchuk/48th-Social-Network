@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, {useEffect, useMemo, useRef} from "react"
 import { connect } from "react-redux"
 import moment from "moment"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -9,7 +9,9 @@ import { markNotificationsRead } from "../../store/profileReducer"
 
 const Notifications = ({setIsNotificationsOpen,notifications,markNotificationsRead}) => {
     const node = useRef()
-    const unreadNotifications = notifications.filter(not => !not.read)
+    const unreadNotifications = useMemo(() => {
+       return notifications.filter(not => !not.read)
+    },[notifications])
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside) 
@@ -20,7 +22,7 @@ const Notifications = ({setIsNotificationsOpen,notifications,markNotificationsRe
             }
             document.removeEventListener("mousedown", handleClickOutside) 
         } 
-    }, []) 
+    }, [unreadNotifications])
 
     const handleClickOutside = e => {
         if (!node.current.contains(e.target)) {

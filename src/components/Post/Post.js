@@ -26,13 +26,13 @@ const Post = ({isAuth,post,likePost,likedPosts,unLikePost,getPostDataById,creden
         } else {
             setIsPostLiked(false)
         }
-    })
+    },[credentials,likedPosts,post.userHandle,post.postId])
 
     useEffect(() => {
         if(commentModalOpen){
             openCommentModal()
         }
-    },[])
+    },[commentModalOpen])
 
     const likePostHandler = () => {
         if(!isAuth){
@@ -50,10 +50,10 @@ const Post = ({isAuth,post,likePost,likedPosts,unLikePost,getPostDataById,creden
 
     const openCommentModal = () => {
         let oldPath = window.location.pathname
-        const newPath = `/users/${post.userHandle}/post/${post.postId}`
+        const userHandle = Array.from(post.userHandle).map(char => char === ' ' ? '%20' : char ).join('')
+        const newPath = `/users/${userHandle}/post/${post.postId}`
 
-        if (oldPath === newPath) oldPath = `/users/${post.userHandle}`
-
+        if (oldPath === newPath) oldPath = `/users/${userHandle}`
         window.history.pushState(null, null, newPath)
 
         setOldPath(oldPath)
@@ -62,8 +62,8 @@ const Post = ({isAuth,post,likePost,likedPosts,unLikePost,getPostDataById,creden
     }
 
     const closeCommentModal = () => {
-
-        const path = oldPathState || `/users/${post.userHandle}`
+        const userHandle = Array.from(post.userHandle).map(char => char === ' ' ? '%20' : char ).join('')
+        const path = oldPathState || `/users/${userHandle}`
         history.push(path)
         setIsCommentModal(false)
     }
@@ -76,8 +76,8 @@ const Post = ({isAuth,post,likePost,likedPosts,unLikePost,getPostDataById,creden
             <PostContent
                 post={post}
                 isPostLiked={isPostLiked}
-                likePostHandler={likePostHandler}
-                unLikePostHandler={unLikePostHandler}
+                likePost={likePostHandler}
+                unLikePost={unLikePostHandler}
                 openCommentModal={openCommentModal}
                 likeCount={post.likeCount}
                 commentCount={post.commentCount}
@@ -85,8 +85,8 @@ const Post = ({isAuth,post,likePost,likedPosts,unLikePost,getPostDataById,creden
             <FullPostModal
                 isPostLiked={isPostLiked}
                 credentials={credentials}
-                likePostHandler={likePostHandler}
-                unLikePostHandler={unLikePostHandler}
+                likePost={likePostHandler}
+                unLikePost={unLikePostHandler}
                 closeCommentModal={closeCommentModal}
                 likeCount={post.likeCount}
                 commentCount={post.commentCount}

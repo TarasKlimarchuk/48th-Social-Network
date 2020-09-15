@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/48th-Social-Network/static/css/main.b2ce8287.chunk.css",
+    "main.js": "/48th-Social-Network/static/js/main.aa2c56fe.chunk.js",
+    "main.js.map": "/48th-Social-Network/static/js/main.aa2c56fe.chunk.js.map",
+    "runtime-main.js": "/48th-Social-Network/static/js/runtime-main.8c7f3dc5.js",
+    "runtime-main.js.map": "/48th-Social-Network/static/js/runtime-main.8c7f3dc5.js.map",
+    "static/js/2.33874287.chunk.js": "/48th-Social-Network/static/js/2.33874287.chunk.js",
+    "static/js/2.33874287.chunk.js.map": "/48th-Social-Network/static/js/2.33874287.chunk.js.map",
+    "index.html": "/48th-Social-Network/index.html",
+    "precache-manifest.3c9a6c8685c886824e7923e71764d88a.js": "/48th-Social-Network/precache-manifest.3c9a6c8685c886824e7923e71764d88a.js",
+    "service-worker.js": "/48th-Social-Network/service-worker.js",
+    "static/css/main.b2ce8287.chunk.css.map": "/48th-Social-Network/static/css/main.b2ce8287.chunk.css.map",
+    "static/js/2.33874287.chunk.js.LICENSE.txt": "/48th-Social-Network/static/js/2.33874287.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8c7f3dc5.js",
+    "static/js/2.33874287.chunk.js",
+    "static/css/main.b2ce8287.chunk.css",
+    "static/js/main.aa2c56fe.chunk.js"
+  ]
+}

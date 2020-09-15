@@ -11,6 +11,7 @@
     color: rgba(#222222, .8);
     white-space: nowrap;
     transform: translateX(-10%);
+    cursor: default;
     &:hover {
       opacity: 0 !important;
     }

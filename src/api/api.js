@@ -2,15 +2,6 @@ import axios from "axios"
 
 axios.defaults.baseURL = 'https://us-central1-social-app-portfolio.cloudfunctions.net/api'
 
-function getOptions() {
-    const token = localStorage.FBIdToken
-    if (token) {
-        return {
-            headers: {'Authorization': token}
-        }
-    }
-}
-
 export const usersApi = {
     signup(handle, email, password, confirmPassword) {
         return axios.post('/signup', {handle, email, password, confirmPassword})
@@ -23,9 +14,11 @@ export const usersApi = {
     },
     getUserDetails(handle) {
         return axios.get(`/user/${handle}`)
+    },
+    updateUserPhoto(handle,photoUrl){
+        return axios.post('/userPhoto', {handle,photoUrl})
     }
 }
-
 
 export const postsApi = {
     getPosts() {

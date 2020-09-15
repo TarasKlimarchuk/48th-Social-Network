@@ -92,23 +92,9 @@ const setUserDetails = payload => ({type: SET_USER_DETAILS, payload})
 
 export const getUserDetails = handle => async dispatch => {
     dispatch(setGetUserDetailsFetching(true))
-    try {
-        const res = await usersApi.getUserDetails(handle)
-        if(res.status === 200){
-            dispatch(setUserDetails(res.data))
-            dispatch(setGetUserDetailsFetching(false))
-        }
-    }
-    catch (err) {
+    const res = await usersApi.getUserDetails(handle)
+    if(res.status === 200){
+        dispatch(setUserDetails(res.data))
         dispatch(setGetUserDetailsFetching(false))
-        if(err.response){
-            if (err.response.status === 400) {
-                //Post not found
-                //Post already liked
-            }
-            if (err.response.status === 500) {
-                //error
-            }
-        }
     }
 }

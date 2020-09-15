@@ -1,7 +1,6 @@
 import React from "react"
 import classes from "./InputBox.module.scss"
 
-
 const InputBox = ({value,label,setValue,isError}) => {
 
     const type = label === 'Password' || label === 'Confirm Password' ? 'password' : 'text'

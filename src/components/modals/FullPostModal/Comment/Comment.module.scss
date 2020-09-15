@@ -11,20 +11,6 @@
   }
 }
 
-.commentWithAnimations {
-  display: flex;
-  margin-bottom: 20px;
-  padding: 10px;
-  border-radius: 5px;
-  background: rgba(grey, .2);
-  box-shadow: 0 0 10px rgba(grey, .4);
-  transition: all 2s;
-  transform: scale(1.03);
-  &:not(:last-child) {
-    border-bottom: 1px solid grey;
-  }
-}
-
 .photo {
   width: 80px;
   height: 80px;

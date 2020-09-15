@@ -9,7 +9,7 @@ import DeleteModal from "../../DeleteModal"
 const DeletePost = ({isAuthUserPost,deletedComment,deleteComment,postId}) => {
     const[deleteCommentModal,setDeleteCommentModal] = useState(false)
 
-    const removeComment = () => {
+    const deleteCommentHandle = () => {
         deleteComment(postId,deletedComment)
     }
 
@@ -22,7 +22,7 @@ const DeletePost = ({isAuthUserPost,deletedComment,deleteComment,postId}) => {
             }
             {
                 deleteCommentModal && <DeleteModal
-                    deleteItem={removeComment}
+                    onDelete={deleteCommentHandle}
                     setDeletePostModal={setDeleteCommentModal}
                     title={'Are you sure you want to delete this Comment?'}
                     isModalOpen={deleteCommentModal}

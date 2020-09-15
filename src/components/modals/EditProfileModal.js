@@ -38,7 +38,7 @@ const EditProfileModal = ({setShowModal,addUserDetails,isFormFetching,editProfil
 
     return (
         <ModalWrapper closeModal={closeModal} isModalOpen={editProfileModal}>
-            <h5 style={{marginBottom: '20px'}} >Here you can edit your bio and location</h5>
+            <h5 style={{marginBottom: '20px'}} >Here you can edit your biography and location</h5>
             <form onSubmit={submitHandler}>
                 <CredErrorBlock errorMessage={addUserDetailsError}/>
                 <InputBox value={bio} setValue={setBio} label={'About You'} isError={isBioError}/>

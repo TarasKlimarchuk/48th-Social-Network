@@ -1,7 +1,9 @@
-import React, {useRef} from "react"
+import React, {useEffect, useRef, useState} from "react"
 import classes from "./Modal.module.scss"
+import {CSSTransition} from "react-transition-group";
 
 const ModalWrapper = ({closeModal, modalWrapCenter = true, isModalOpen, children}) => {
+    const[isTransition,setIsTransition] = useState(false)
 
     const modalWrap = useRef()
     const handleClickOutside = e => {
@@ -10,14 +12,28 @@ const ModalWrapper = ({closeModal, modalWrapCenter = true, isModalOpen, children
         }
     }
 
+    useEffect(() => {
+        if(isModalOpen) setIsTransition(true)
+        else setIsTransition(false)
+    },[isModalOpen])
+
     return (
         <>
             {
-                isModalOpen && <div className={modalWrapCenter ? classes.modalWrapCenter : classes.modalWrap} onMouseDown={handleClickOutside} ref={modalWrap}>
-                    <div className={classes.modal}>
-                        {children}
+                isModalOpen &&
+                    <div className={modalWrapCenter ? classes.modalWrapCenter : classes.modalWrap} onMouseDown={handleClickOutside} ref={modalWrap}>
+                        <CSSTransition
+                            in={isTransition}
+                            timeout={300}
+                            classNames="modal"
+                            unmountOnExit
+                        >
+                            <div className={classes.modal}>
+                                {children}
+                            </div>
+                        </CSSTransition>
                     </div>
-                </div>
+
             }
         </>
     )
