@@ -1,8 +1,10 @@
-import { postsApi} from "../api/api"
-import { app } from '../FBconfig/config'
+import { postsApi, usersApi } from "../api/api"
 import { updatePostsUserPhoto } from "./homeReducer"
+import axios from "axios";
+import { authorizationsSuccess } from "./authReducer";
 
 const SET_USER_DATA = 'profileReducer/SET_USER_DATA'
+const SET_EDIT_PHOTO_ERROR = 'profileReducer/SET_EDIT_PHOTO_ERROR'
 const SET_IS_FETCHING = 'profileReducer/SET_IS_FETCHING'
 const SET_FORM_FETCHING = 'profileReducer/SET_FORM_FETCHING'
 const UPDATE_USER_PHOTO = 'profileReducer/UPDATE_USER_PHOTO'
@@ -22,6 +24,7 @@ const initialState = {
     isFormFetching: false,
     addUserDetailsError: null,
     editPhotoModal: false,
+    editPhotoError: false,
     editProfileModal: false
 }
 
@@ -30,6 +33,10 @@ export const profileReducer = (state = initialState, action) => {
         case SET_USER_DATA:
             return {
                 ...state, ...action.payload
+            }
+        case SET_EDIT_PHOTO_ERROR:
+            return {
+                ...state, ...action.error
             }
         case SET_USER_DATA_NULL:
             return {
@@ -95,6 +102,7 @@ export const profileReducer = (state = initialState, action) => {
 }
 
 const setUserData = payload => ({type: SET_USER_DATA, payload})
+const setEditPhotoError = error => ({type: SET_EDIT_PHOTO_ERROR, error})
 export const setUserDataNull = () => ({type: SET_USER_DATA_NULL})
 const setIsProfileFetching = isFetching => ({type: SET_IS_FETCHING, isFetching})
 export const updateLikedPosts = (postId,event) => ({type: UPDATE_LIKED_POSTS, postId,event})
@@ -117,8 +125,13 @@ export const getAuthUserDetails = () => async dispatch => {
     }
     catch (err) {
         dispatch(setIsProfileFetching(false))
-        if (err.response && err.response.status === 500) {
-            //error
+        if (err.response) {
+            if (err.response.status === 403) {
+                localStorage.removeItem('FBIdToken')
+                delete axios.defaults.headers.common['Authorization']
+                dispatch(authorizationsSuccess(false))
+                window.location.href = '/login'
+            }
         }
     }
 }
@@ -140,44 +153,33 @@ export const addUserDetails = (bio,location) => async dispatch => {
             if (err.response.status === 400) {
                 dispatch(addUserDetailsError(err.response.data.error))
             }
+            if (err.response.status === 403) {
+                localStorage.removeItem('FBIdToken')
+                delete axios.defaults.headers.common['Authorization']
+                dispatch(authorizationsSuccess(false))
+                window.location.href = '/login'
+            }
             if (err.response.status === 500) {
-                dispatch(addUserDetailsError('Something went wrong, please try again later'))
+                dispatch(addUserDetailsError('Something went wrong'))
             }
         }
     }
 }
 
 export const editPhoto = (imageUrl,handle) => async dispatch => {
-    const db = app.firestore()
+    const res = await usersApi.updateUserPhoto(handle,imageUrl)
     try {
-        db.doc(`/users/${handle}`).update({ imageUrl }).then(() => {
-            return db.collection('posts').where('userHandle', '==', handle)
-                .get()
-                .then(posts => {
-                    posts.forEach(doc => {
-                        doc.ref.update({userImage: imageUrl})
-                    })
-                })
-                .then(() => {
-                    return db.collection('comments').where('userHandle', '==', handle)
-                        .get()
-                        .then(comments => {
-                            comments.forEach(doc => {
-                                doc.ref.update({userImage: imageUrl})
-                            })
-                        })
-                })
-                .then(() => {
-                    dispatch(setFormFetching(false))
-                    dispatch(setEditPhotoModal(false))
-                    dispatch(updateUserPhoto(imageUrl))
-                    dispatch(updatePostsUserPhoto(imageUrl,handle))
-            })
-        })
+        if(res.status === 200){
+            dispatch(setFormFetching(false))
+            dispatch(setEditPhotoError(false))
+            dispatch(setEditPhotoModal(false))
+            dispatch(updateUserPhoto(imageUrl))
+            dispatch(updatePostsUserPhoto(imageUrl,handle))
+        }
     }
     catch (err) {
-        dispatch(setFormFetching(true))
-        console.log(err)
+        dispatch(setFormFetching(false))
+        dispatch(setEditPhotoError(true))
     }
 }
 
@@ -189,8 +191,13 @@ export const markNotificationsRead = arr => async dispatch => {
         }
     }
     catch (err) {
-        if (err.response && err.response.status === 500) {
-            //error
+        if (err.response) {
+            if (err.response.status === 403) {
+                localStorage.removeItem('FBIdToken')
+                delete axios.defaults.headers.common['Authorization']
+                dispatch(authorizationsSuccess(false))
+                window.location.href = '/login'
+            }
         }
     }
 }

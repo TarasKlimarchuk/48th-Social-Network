@@ -1,6 +1,8 @@
 import { postsApi } from "../api/api"
 import { commentCountMinus, commentCountPlus } from "./homeReducer"
 import { userProfileCommentCountMinus, userProfileCommentCountPlus } from "./usersReducer"
+import axios from "axios";
+import {authorizationsSuccess} from "./authReducer";
 
 const SET_POST_DATA = 'fullPostReducer/SET_POST_DATA'
 const GET_POST_DATA_ERROR = 'fullPostReducer/GET_POST_DATA_ERROR'
@@ -9,7 +11,6 @@ const ADD_NEW_COMMENT = 'fullPostReducer/ADD_NEW_COMMENT'
 const SET_COMMENT_ERROR = 'fullPostReducer/SET_COMMENT_ERROR'
 const FORM_IS_FETCHING = 'fullPostReducer/FORM_IS_FETCHING'
 const REMOVE_COMMENT = 'fullPostReducer/REMOVE_COMMENT'
-const DELETE_COMMENT_ANIMATIONS = 'fullPostReducer/DELETE_COMMENT_ANIMATIONS'
 const SET_IS_DELETE_FETCHING = 'fullPostReducer/SET_IS_DELETE_FETCHING'
 
 const initialState = {
@@ -55,16 +56,6 @@ export const fullPostReducer = (state = initialState, action) => {
                 ...state,
                 post: {...state.post, comments: state.post.comments.filter(comment => comment.commentId !== action.commentId)}
             }
-        case DELETE_COMMENT_ANIMATIONS:
-            return {
-                ...state,
-                post: {...state.post, comments: state.post.comments.map(comment => {
-                        if(comment.isAnimation){
-                            return {...comment, isAnimation: false}
-                        }
-                        return {...comment, isAnimation: null}
-                    })}
-            }
         case SET_IS_DELETE_FETCHING:
             return {
                 ...state,
@@ -82,7 +73,6 @@ export const addNewComment = payload => ({type: ADD_NEW_COMMENT, payload})
 export const setCommentError = error => ({type: SET_COMMENT_ERROR, error})
 export const setIsFormFetching = isFetching => ({type: FORM_IS_FETCHING, isFetching})
 const removeComment = commentId => ({type: REMOVE_COMMENT, commentId})
-export const deleteCommentAnimation = comment => ({type: DELETE_COMMENT_ANIMATIONS, comment})
 const setIsDeleteFetching = isFetching => ({type: SET_IS_DELETE_FETCHING, isFetching})
 
 export const getPostDataById = postId => async dispatch => {
@@ -99,10 +89,6 @@ export const getPostDataById = postId => async dispatch => {
         dispatch(getPostDataFetching(false))
         if(err.response) {
             if (err.response.status === 400) {
-                //dispatch(setCommentError(err.response.data.error))
-                //POST NOT FOUND
-            }
-            if (err.response.status === 500) {
                 dispatch(getPostDataError(true))
             }
         }
@@ -118,9 +104,6 @@ export const sendComment = (postId,comment) => async dispatch => {
             dispatch(commentCountPlus(postId))
             dispatch(userProfileCommentCountPlus(postId))
             dispatch(addNewComment(res.data))
-            setTimeout(() => {
-                dispatch(deleteCommentAnimation(res.data))
-            },3000)
         }
     }
     catch (err) {
@@ -128,6 +111,12 @@ export const sendComment = (postId,comment) => async dispatch => {
         if(err.response) {
             if (err.response.status === 400) {
                 dispatch(setCommentError(err.response.data.error))
+            }
+            if (err.response.status === 403) {
+                localStorage.removeItem('FBIdToken')
+                delete axios.defaults.headers.common['Authorization']
+                dispatch(authorizationsSuccess(false))
+                window.location.href = '/login'
             }
             if (err.response.status === 500) {
                 dispatch(setCommentError('Something went wrong, please try again later'))
@@ -150,11 +139,11 @@ export const deleteComment = (postId,commentId) => async dispatch => {
     catch (err) {
         dispatch(setIsDeleteFetching(false))
         if(err.response) {
-            if (err.response.status === 400) {
-                console.log(400)
-            }
-            if (err.response.status === 500) {
-                console.log(500)
+            if (err.response.status === 403) {
+                localStorage.removeItem('FBIdToken')
+                delete axios.defaults.headers.common['Authorization']
+                dispatch(authorizationsSuccess(false))
+                window.location.href = '/login'
             }
         }
     }

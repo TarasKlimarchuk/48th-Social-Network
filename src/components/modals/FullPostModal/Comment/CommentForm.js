@@ -13,7 +13,7 @@ const CommentForm = ({sendComment,commentError,postId,isFormFetching}) => {
         if(!isFormFetching && !commentError){
             setComment('')
         }
-    },[isFormFetching])
+    },[isFormFetching,commentError])
 
     const submitHandler = e => {
         e.preventDefault()

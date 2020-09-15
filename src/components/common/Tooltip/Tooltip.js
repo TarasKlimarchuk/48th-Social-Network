@@ -5,7 +5,7 @@ const Tooltip = ({text,children}) => {
     return (
         <div className={classes.tooltip}>
             <span className={classes.text}>{text}</span>
-            {children}
+                {children}
         </div>
     )
 }

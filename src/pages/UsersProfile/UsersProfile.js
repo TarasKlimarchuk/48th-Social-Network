@@ -11,6 +11,7 @@ import { Preloader } from "../../components/common/Preloader/Preloaders"
 import { getUserDetails } from "../../store/usersReducer"
 import { getAuthUserDetails } from "../../store/profileReducer"
 import Profile from "../../components/Profile/Profile"
+import {CSSTransition, TransitionGroup} from "react-transition-group";
 
 const UsersProfile = ({isAuth,credentials,posts,user,getUserDetailsFetching,getUserDetails,match,getAuthUserDetails}) => {
     const userHandle = match.params.handle
@@ -49,13 +50,39 @@ const UsersProfile = ({isAuth,credentials,posts,user,getUserDetailsFetching,getU
         postId ?
             filteredPosts.map(post => {
                 if(post.postId !== postId){
-                    return <Post key={post.postId} post={post}/>
+
+                    return (
+                        <CSSTransition
+                            key={post.postId}
+                            timeout={500}
+                            classNames="post"
+                        >
+                            <Post key={post.postId} post={post}/>
+                        </CSSTransition>
+                    )
                 } else {
-                    return <Post key={post.postId} post={post} commentModalOpen/>
+
+                    return (
+                        <CSSTransition
+                            key={post.postId}
+                            timeout={500}
+                            classNames="post"
+                        >
+                            <Post key={post.postId} post={post} commentModalOpen/>
+                        </CSSTransition>
+                    )
                 }
             })
             : filteredPosts.map(post => {
-                return <Post key={post.postId} post={post}/>
+                return (
+                    <CSSTransition
+                        key={post.postId}
+                        timeout={500}
+                        classNames="post"
+                    >
+                        <Post key={post.postId} post={post}/>
+                    </CSSTransition>
+                )
             })
     )
 
@@ -67,7 +94,7 @@ const UsersProfile = ({isAuth,credentials,posts,user,getUserDetailsFetching,getU
                         <div className={homeClasses.postsContainer}>
                             <span className={classes.postsTitle}>posts of {user.handle}</span>
                             {
-                                posts.length > 0 ? <div>{postsMarkup}</div> : <div>This user has no posts</div>
+                                posts.length > 0 ? <TransitionGroup>{postsMarkup}</TransitionGroup> : <div>This user has no posts</div>
                             }
                         </div>
                         {

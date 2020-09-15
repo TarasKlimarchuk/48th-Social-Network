@@ -67,6 +67,7 @@ export const signup = (handle,email,password,confirmPassword) => async dispatch 
                 dispatch(signupError(err.response.data.error))
             }
             if (err.response.status === 500) {
+                console.log(err.response)
                 dispatch(signupError('Something went wrong, please try again later'))
             }
         }
@@ -97,24 +98,12 @@ export const login = (email,password) => async dispatch => {
 }
 
 export const signout = () => async dispatch => {
-    dispatch(setFormFetching(true))
-    try {
-        const res = await usersApi.logout()
-        if (res.status === 200) {
-            localStorage.removeItem('FBIdToken')
-            delete axios.defaults.headers.common['Authorization']
-            dispatch(setUserDataNull())
-            dispatch(authorizationsSuccess(false))
-        }
-        dispatch(setFormFetching(false))
-    } catch (err) {
-        dispatch(setFormFetching(false))
-        if(err.response) {
-            if (err.response.status === 500) {
-                console.log('Something Wrond')
-                //dispatch(loginError('Something went wrong, please try again later'))
-            }
-        }
+    const res = await usersApi.logout()
+    if (res.status === 200) {
+        localStorage.removeItem('FBIdToken')
+        delete axios.defaults.headers.common['Authorization']
+        dispatch(setUserDataNull())
+        dispatch(authorizationsSuccess(false))
     }
 }
 

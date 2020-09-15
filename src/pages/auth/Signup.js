@@ -20,15 +20,15 @@ const Signup = ({signup,signupError,isFormFetching}) => {
     }
 
     return (
-        <AuthFormContainer height={650}>
+        <AuthFormContainer height={signupError ? 750 : 700}>
             <h2 className={classes.title}>Create an account</h2>
             <form onSubmit={onSubmitHandle} className={classes.form}>
                 <CredErrorBlock errorMessage={signupError}/>
-                <InputBox value={handle} setValue={setHandle} label={'Handle'} />
+                <InputBox value={handle} setValue={setHandle} label={'Login'} />
                 <InputBox value={email} setValue={setEmail} label={'Email'} />
                 <InputBox value={password} setValue={setPassword} label={'Password'} />
                 <InputBox value={confirmPassword} setValue={setConfirmPassword} label={'Confirm Password'} />
-                <button disabled={isFormFetching} className={classes.button} type="submit">LOGIN</button>
+                <button disabled={isFormFetching} className={classes.button} type="submit">SIGN UP</button>
             </form>
             <div className={classes.link}>
                 <small>Already have an account? login <Link to={'/login'}>here</Link></small>

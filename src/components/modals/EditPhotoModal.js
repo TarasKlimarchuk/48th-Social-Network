@@ -7,7 +7,7 @@ import { editPhoto, setFormFetching } from "../../store/profileReducer"
 import ModalWrapper from "./ModalWrapper"
 import CredErrorBlock from "../common/CredErrorBlock/CredErrorBlock"
 
-const EditPhotoModal = ({setEditPhotoModal,handle,editPhoto,isFetching,setFormFetching,editPhotoModal}) => {
+const EditPhotoModal = ({setEditPhotoModal, editPhotoError, handle, editPhoto, isFetching, setFormFetching, editPhotoModal}) => {
     const[file,setFile] = useState(null)
     const[fileTypeError,setFileTypeError] = useState(false)
 
@@ -41,6 +41,7 @@ const EditPhotoModal = ({setEditPhotoModal,handle,editPhoto,isFetching,setFormFe
                 <form onSubmit={submitHandler}>
                     <div>
                         <CredErrorBlock errorMessage={fileTypeError && `Invalid type of the file, must be png or jpeg`}/>
+                        <CredErrorBlock errorMessage={editPhotoError && `Something went wrong`}/>
                         <input type="file" onChange={onFileChange} style={{marginTop:'10px'}}/>
                     </div>
                     {isFetching && <Preloader/>}
@@ -53,7 +54,8 @@ const EditPhotoModal = ({setEditPhotoModal,handle,editPhoto,isFetching,setFormFe
 
 const mapStateToProps = state => ({
     isFetching: state.profilePage.isFormFetching,
-    editPhotoModal: state.profilePage.editPhotoModal
+    editPhotoModal: state.profilePage.editPhotoModal,
+    editPhotoError: state.profilePage.editPhotoError
 })
 
 export default connect(mapStateToProps,{editPhoto,setFormFetching})(EditPhotoModal)

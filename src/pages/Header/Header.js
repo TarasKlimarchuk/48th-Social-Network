@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, {useMemo, useState} from "react"
 import { connect } from "react-redux"
 import { Link, Route } from "react-router-dom"
 import classes from './Header.module.scss'
@@ -13,7 +13,9 @@ import Tooltip from "../../components/common/Tooltip/Tooltip"
 const Header = ({isAuth,credentials,notifications,setCreatePostModalOpen}) => {
     const[isNotificationOpen,setIsNotificationsOpen] = useState(false)
 
-    let unreadNotCount = notifications.filter(not => !not.read).length
+    let unreadNotCount = useMemo(() => {
+        return notifications.filter(not => !not.read).length
+    },[notifications])
 
     return (
         <div className={classes.header}>
@@ -36,34 +38,39 @@ const Header = ({isAuth,credentials,notifications,setCreatePostModalOpen}) => {
                             </Tooltip>
                         </Route>
                     }
-                    <Link to={'/'}>
-                        <Tooltip text="main page">
-                            <div className={classes.navIcon}>
-                            <FontAwesomeIcon icon={faHome} size="lg" color='white'/>
-                            </div>
-                        </Tooltip>
-                    </Link>
-                    <Link to={credentials ? `/users/${credentials.handle}` : '/'}>
-                        <Tooltip text="your profile">
-                            <div className={classes.navIcon}>
-                                <FontAwesomeIcon icon={faUserAlt} size="lg" color='white'/>
-                            </div>
-                        </Tooltip>
-                    </Link>
-                    <div style={{'position': 'relative'}}>
-                        <Tooltip text="notifications">
-                            <div onMouseDown={() => {setIsNotificationsOpen(!isNotificationOpen)}} className={classes.navIcon}>
-                                <FontAwesomeIcon icon={faBell} size="lg" color='white'/>
-                            </div>
-                        </Tooltip>
-                        {
-                            unreadNotCount > 0 && <div className={classes.notCount}>{unreadNotCount}</div>
-                        }
-                        {
-                            isNotificationOpen && <Notifications setIsNotificationsOpen={setIsNotificationsOpen} notifications={notifications}/>
-                        }
-                        <CreatePostModal setCreatePostModalOpen={setCreatePostModalOpen}/>
-                    </div>
+                    <Tooltip text="main page">
+                        <Link to={'/'}>
+
+                                <div className={classes.navIcon}>
+                                    <FontAwesomeIcon icon={faHome} size="lg" color='white'/>
+                                </div>
+
+                        </Link>
+                    </Tooltip>
+                    <Tooltip text="your profile">
+                        <Link to={credentials ? `/users/${credentials.handle}` : '/'}>
+
+                                <div className={classes.navIcon}>
+                                    <FontAwesomeIcon icon={faUserAlt} size="lg" color='white'/>
+                                </div>
+
+                        </Link>
+                    </Tooltip>
+                    <Tooltip text="notifications">
+                        <div style={{'position': 'relative'}}>
+                                <div onMouseDown={() => {setIsNotificationsOpen(!isNotificationOpen)}} className={classes.navIcon}>
+                                    <FontAwesomeIcon icon={faBell} size="lg" color='white'/>
+                                </div>
+
+                            {
+                                unreadNotCount > 0 && <div className={classes.notCount}>{unreadNotCount}</div>
+                            }
+                            {
+                                isNotificationOpen && <Notifications setIsNotificationsOpen={setIsNotificationsOpen} notifications={notifications}/>
+                            }
+                            <CreatePostModal setCreatePostModalOpen={setCreatePostModalOpen}/>
+                        </div>
+                    </Tooltip>
                 </div>
                     : <div className={classes.nav}>
                         <div className={classes.navItem}>

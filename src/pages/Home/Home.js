@@ -6,6 +6,7 @@ import Post from "../../components/Post/Post"
 import { Preloader } from "../../components/common/Preloader/Preloaders"
 import Profile from "../../components/Profile/Profile"
 import { getAuthUserDetails } from "../../store/profileReducer"
+import {CSSTransition, TransitionGroup} from "react-transition-group";
 
 const Home = ({isAuth,getAuthUserDetails,getPosts,posts,isHomePageFetching,isProfileFetching}) => {
     const isMobileScreenWidth = document.documentElement.clientWidth <= 700
@@ -28,11 +29,21 @@ const Home = ({isAuth,getAuthUserDetails,getPosts,posts,isHomePageFetching,isPro
                     <>
                         <div className={classes.postsContainer}>
                             <span className={classes.postsTitle}>POSTS</span>
-                            {
+                            <TransitionGroup>
+                                {
                                 posts.map(post => {
-                                    return <Post key={post.postId} post={post} />
+                                    return (
+                                        <CSSTransition
+                                            key={post.postId}
+                                            timeout={500}
+                                            classNames="post"
+                                        >
+                                            <Post post={post} />
+                                        </CSSTransition>
+                                    )
                                 })
                             }
+                            </TransitionGroup>
                         </div>
                         { !isMobileScreenWidth && <Profile /> }
                     </>
@@ -48,11 +59,22 @@ const Home = ({isAuth,getAuthUserDetails,getPosts,posts,isHomePageFetching,isPro
             {
                 !isHomePageFetching ? <>
                         <div className={classes.postsContainer}>
-                            {
-                                posts.map(post => {
-                                    return <Post key={post.postId} post={post} />
-                                })
-                            }
+                            <span className={classes.postsTitle}>POSTS</span>
+                            <TransitionGroup>
+                                {
+                                    posts.map(post => {
+                                        return (
+                                            <CSSTransition
+                                                key={post.postId}
+                                                timeout={500}
+                                                classNames="post"
+                                            >
+                                                <Post post={post} />
+                                            </CSSTransition>
+                                        )
+                                    })
+                                }
+                            </TransitionGroup>
                         </div>
                         { !isMobileScreenWidth && <Profile /> }
                     </>
