@@ -1,3 +1,5 @@
+@import "src/cssCommonModules/vars.module";
+
 .header {
     display: flex;
     justify-content: center;
@@ -7,9 +9,9 @@
     left: 0;
     right: 0;
     height: 50px;
-    background: rgb(0,160,202);
-    box-shadow: 0 0 5px black;
-    z-index: 100;
+    background: $background-blue;
+    box-shadow: 0 0 5px $black;
+    z-index: 10;
 }
 
 .nav {
@@ -32,17 +34,17 @@
 }
 
 .navItem a {
+    padding: 10px;
     text-decoration: none;
     font-size: 18px;
     font-weight: 500;
-    padding: 10px;
-    color: rgba(255,255,255, .9);
+    color: rgba($white, .9);
     cursor: pointer;
     transition: .1s;
 }
 
 .navItem a:hover {
-    color: rgba(255,255,255, 1);
+    color: rgba($white, 1);
 }
 
 .notCount {
@@ -57,8 +59,8 @@
     border-radius: 50%;
     line-height: 1;
     font-size: 12px;
-    color: #fff;
-    background: rgb(255,75,0);
+    color: $white;
+    background: $notification-background;
 }
 
 @media (max-width: 780px) {

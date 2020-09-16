@@ -1,3 +1,5 @@
+@import "src/cssCommonModules/vars.module";
+
 .inputBox {
     position: relative;
 }
@@ -14,11 +16,11 @@
 }
 
 .input {
-    border-bottom: 2px solid rgb(169,169,169);
+    border-bottom: 2px solid $grey;
 }
 
 .errorInput {
-    border-bottom: 2px solid rgb(255,0,0);
+    border-bottom: 2px solid $red;
 }
 
 .label, .errorLabel {
@@ -34,11 +36,11 @@
 }
 
 .label {
-    color: rgb(169,169,169);
+    color: $grey;
 }
 
 .errorLabel {
-    color: rgb(255,0,0);
+    color: $red;
 }
 
 .errorInput:focus ~ label,
@@ -47,12 +49,12 @@
     left: 0;
     font-size: 12px;
     font-weight: 500;
-    color: rgb(255,0,0);
+    color: $red;
 }
 
 .errorInput:focus,
 .errorInput:valid {
-    border-bottom: 2px solid rgb(255,0,0);
+    border-bottom: 2px solid $red;
 }
 
 .input:focus ~ label,
@@ -61,10 +63,10 @@
     left: 0;
     font-size: 12px;
     font-weight: 500;
-    color: rgba(0,160,202, .9);
+    color: rgba($background-blue, .9);
 }
 
 .input:focus,
 .input:valid {
-    border-bottom: 2px solid rgba(0,160,202, .9);
+    border-bottom: 2px solid rgba($background-blue, .9);
 }

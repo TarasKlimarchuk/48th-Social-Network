@@ -1,3 +1,5 @@
+@import "src/cssCommonModules/vars.module";
+
 .tooltip {
   position: relative;
   .text {
@@ -7,8 +9,8 @@
     max-width: 250%;
     border-radius: 10px;
     padding: 3px 5px;
-    background: rgba(grey, .8);
-    color: rgba(#222222, .8);
+    background: rgba($grey, .8);
+    color: rgba($light-black, .8);
     white-space: nowrap;
     transform: translateX(-10%);
     cursor: default;

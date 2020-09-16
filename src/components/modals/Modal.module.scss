@@ -1,3 +1,5 @@
+@import "src/cssCommonModules/vars.module";
+
 .modalWrap {
   display: flex;
   flex-direction: column;
@@ -9,8 +11,8 @@
   right: 0;
   left: 0;
   overflow-y: scroll;
-  background: rgba(0,0,0, .2);
-  z-index: 101;
+  background: rgba($black, .2);
+  z-index: 15;
   .modal {
     position: relative;
     width: 96%;
@@ -20,7 +22,7 @@
     margin-left: 15px;
     padding: 25px;
     border-radius: 5px;
-    background: #fff;
+    background: $white;
     z-index: 10000;
   }
 }
@@ -35,7 +37,7 @@
   right: 0;
   left: 0;
   overflow-y: scroll;
-  background: rgba(0,0,0, .2);
+  background: rgba($black, .2);
   z-index: 101;
   .modal {
     position: relative;
@@ -54,6 +56,6 @@
   top: -15px;
   right: -15px;
   border-radius: 15px;
-  background: #fff;
+  background: $white;
   cursor: pointer;
 }

@@ -1,11 +1,13 @@
+@import "src/cssCommonModules/vars.module";
+
 .post {
   position: relative;
   width: 98%;
   margin-bottom: 60px;
-  border-bottom: 10px solid rgba(0,0,0,.2);
+  border-bottom: 10px solid rgba($black,.2);
   border-radius: 3px;
-  background: #fff;
-  box-shadow: 0 0 5px rgba(0,0,0, .4);
+  background: $white;
+  box-shadow: 0 0 5px rgba($black, .4);
 }
 
 .userPhoto {
@@ -15,7 +17,7 @@
   height: 120px;
   width: 120px;
   border-radius: 50%;
-  box-shadow: 0 0 5px rgba(0,0,0, .4);
+  box-shadow: 0 0 5px rgba($black, .4);
 }
 
 .basket {
@@ -23,10 +25,10 @@
   top: 15px;
   right: 15px;
   padding: 5px;
-  color: rgba(255,0,0,.6);
+  color: rgba($red,.6);
   cursor: pointer;
   &:hover {
-    color: rgba(255,0,0,.9);
+    color: rgba($red,.9);
   }
 }
 

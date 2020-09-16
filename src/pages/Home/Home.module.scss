@@ -1,3 +1,5 @@
+@import "src/cssCommonModules/vars.module";
+
 .homeContainer {
   display: flex;
   width: 100%;
@@ -12,7 +14,7 @@
   width: 63%;
   padding-left: 12px;
   padding-top: 30px;
-  border: 2px solid rgba(0,0,0,.1);
+  border: 2px solid rgba($black,.1);
   border-radius: 7px;
 }
 
@@ -23,8 +25,8 @@
   left: calc(50% - 15px);
   font-size: 20px;
   font-weight: 500;
-  background: rgb(245,244,246);
-  color: rgba(0,0,0, .5);
+  background: $background-white;
+  color: rgba($black, .5);
   user-select:none;
 }
 

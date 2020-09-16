@@ -1,3 +1,5 @@
+@import "src/cssCommonModules/vars.module";
+
 .content {
   padding: 20px;
 }
@@ -6,7 +8,7 @@
   display: flex;
   justify-content: center;
   font-size: 19px;
-  color: rgb(0,110,225);
+  color: $font-blue;
 }
 
 .createdAt {

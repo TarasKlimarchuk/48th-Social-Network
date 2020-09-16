@@ -1,3 +1,5 @@
+@import "src/cssCommonModules/vars.module";
+
 .userProfileWrap {
     width: 35%;
     margin-left: 3px;
@@ -8,8 +10,8 @@
     width: 100%;
     padding: 20px;
     border-radius: 7px;
-    background: #fff;
-    box-shadow: 0 0 5px rgba(0,0,0, .4);
+    background: $white;
+    box-shadow: 0 0 5px rgba($black, .4);
 }
 
 .postsTitle {
@@ -19,8 +21,8 @@
     left: 50%;
     font-size: 20px;
     font-weight: 500;
-    background: rgb(245,244,246);
-    color: rgba(0,0,0, .5);
+    background: $background-white;
+    color: rgba($black, .5);
     transform: translateX(-50%);
     user-select:none;
     white-space: nowrap;
@@ -44,7 +46,7 @@
     right: -5px;
     cursor: pointer;
     &:hover svg {
-        color: rgba(0,160,202, 1);
+        color: rgba($background-blue, 1);
     }
 }
 
@@ -53,7 +55,7 @@
     padding-bottom: 5px;
     line-height: 1;
     font-size: 25px;
-    color: rgb(0,110,225);
+    color: $font-blue;
 }
 
 .bio {
@@ -88,11 +90,11 @@
     cursor: pointer;
     span {
         padding-left: 5px;
-        color: rgba(0,160,202, .8);
+        color: rgba($background-blue, .8);
         text-decoration: underline;
     }
     &:hover span, &:hover svg {
-        color: rgba(0,160,202, 1);
+        color: rgba($background-blue, 1);
     }
 }
 
@@ -104,10 +106,10 @@
     span {
         padding-left: 5px;
         text-decoration: underline;
-        color: rgba(0,160,202, .8);
+        color: rgba($background-blue, .8);
     }
     &:hover span, &:hover svg {
-        color: rgba(0,160,202, 1);
+        color: rgba($background-blue, 1);
     }
 }
 
@@ -137,7 +139,7 @@
         border: 2px solid rgba(#222, .5);
         border-radius: 3px;
         &:hover {
-            box-shadow: 0 0 5px rgba(#222, .5);
+            box-shadow: 0 0 5px rgba($light-black, .5);
         }
     }
     .content {
